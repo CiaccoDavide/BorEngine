@@ -2,15 +2,7 @@
 #include <string>
 #include "MainGame.h"
 #include "Sprite.h"
-
-void fatalError(std::string errorString)
-{
-	std::cout << errorString << std::endl;
-	std::cout << "Enter any key to quit...";
-	int tmp;
-	std::cin >> tmp;
-	SDL_Quit();
-}
+#include "Errors.h"
 
 MainGame::MainGame()
 {
@@ -29,7 +21,7 @@ void MainGame::run()
 {
 	initSystems();
 
-	_sprite.init(-1.0f,-1.0f,1.0f,1.0f); // just testing
+	_sprite.init(0.0f,0.0f,1.4f,1.4f); // just testing
 
 	gameLoop();
 }
@@ -60,9 +52,16 @@ void MainGame::initSystems()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // against flickering!
 
 	glClearColor(0.569f, 0.204f, 0.192f, 1.0f); // set the background color, will be applied whenever GL_COLOR_BUFFER_BIT will be called
+
+	initShaders();
 }
 
-
+void MainGame::initShaders()
+{
+	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
+	_colorProgram.addAttribute("vertexPosition");
+	_colorProgram.linkShaders();
+}
 
 void MainGame::gameLoop()
 {
@@ -97,7 +96,11 @@ void MainGame::drawGame()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // bit-wise or | 
 
+	_colorProgram.use();
+
 	_sprite.draw();
+
+	_colorProgram.unuse();
 
 	SDL_GL_SwapWindow(_window); // for swapping the double buffer (against flickering)
 }

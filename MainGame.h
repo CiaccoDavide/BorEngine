@@ -3,6 +3,8 @@
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
+#include "GLSLProgram.h"
+
 #include "Sprite.h"
 
 enum class GameState {
@@ -23,6 +25,7 @@ private:
 	void gameLoop();
 	void processInput();
 	void drawGame();
+	void initShaders();
 
 	SDL_Window* _window;
 	int _screenWidth;
@@ -34,5 +37,7 @@ private:
 	float _mouseY;
 
 	Sprite _sprite;
+
+	GLSLProgram _colorProgram;
 };
 
