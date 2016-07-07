@@ -4,12 +4,16 @@
 #include "Sprite.h"
 #include "Errors.h"
 
-MainGame::MainGame()
+MainGame::MainGame() :
+	_window(nullptr),
+	_screenWidth(480),
+	_screenHeight(320),
+	_gameState(GameState::PLAY),
+	_time(0)
 {
-	_window = nullptr;
-	_screenWidth = 1024;
-	_screenHeight = 600;
-	_gameState = GameState::PLAY;
+
+
+
 }
 
 
@@ -21,7 +25,7 @@ void MainGame::run()
 {
 	initSystems();
 
-	_sprite.init(0.0f,0.0f,1.4f,1.4f); // just testing
+	_sprite.init(0.0f, 0.0f, 1.9f, 1.9f); // just testing
 
 	gameLoop();
 }
@@ -60,6 +64,7 @@ void MainGame::initShaders()
 {
 	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
 	_colorProgram.addAttribute("vertexPosition");
+	_colorProgram.addAttribute("vertexColor");
 	_colorProgram.linkShaders();
 }
 
@@ -68,6 +73,7 @@ void MainGame::gameLoop()
 	while (_gameState != GameState::EXIT)
 	{
 		processInput();
+		_time += 0.001; // arbitrary time for now...
 		drawGame();
 	}
 }
@@ -97,6 +103,9 @@ void MainGame::drawGame()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // bit-wise or | 
 
 	_colorProgram.use();
+
+	GLuint timeLocation = _colorProgram.getUniformLocation("time");
+	glUniform1f(timeLocation, _time);
 
 	_sprite.draw();
 
