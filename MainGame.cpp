@@ -73,7 +73,7 @@ void MainGame::gameLoop()
 	while (_gameState != GameState::EXIT)
 	{
 		processInput();
-		_time += 0.001; // arbitrary time for now...
+		_time += 0.001f; // arbitrary time for now...
 		drawGame();
 	}
 }
