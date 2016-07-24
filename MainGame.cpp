@@ -3,6 +3,7 @@
 #include "MainGame.h"
 #include "Sprite.h"
 #include "Errors.h"
+#include "ImageLoader.h"
 
 MainGame::MainGame() :
 	_window(nullptr),
@@ -25,7 +26,14 @@ void MainGame::run()
 {
 	initSystems();
 
-	_sprite.init(0.0f, 0.0f, 1.9f, 1.9f); // just testing
+	float spritePixelSize_width = 210;
+	float spritePixelSize_height = 210;
+
+	_sprite.init(0.0f, 0.0f, 2.0f * spritePixelSize_width / (float)_screenWidth, 2.0f * spritePixelSize_height / (float)_screenHeight); // just testing
+
+	_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon.png");
+	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency.png");
+	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency_fades.png");
 
 	gameLoop();
 }
@@ -65,6 +73,8 @@ void MainGame::initShaders()
 	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
 	_colorProgram.addAttribute("vertexPosition");
 	_colorProgram.addAttribute("vertexColor");
+	_colorProgram.addAttribute("vertexUV");
+
 	_colorProgram.linkShaders();
 }
 
@@ -104,10 +114,18 @@ void MainGame::drawGame()
 
 	_colorProgram.use();
 
-	GLuint timeLocation = _colorProgram.getUniformLocation("time");
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _playerTexture.id);
+	GLint textureLocation = _colorProgram.getUniformLocation("tex");
+	glUniform1i(textureLocation, 0);
+
+	 GLuint timeLocation = _colorProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, _time);
 
+
 	_sprite.draw();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	_colorProgram.unuse();
 
