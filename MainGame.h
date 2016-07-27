@@ -8,6 +8,8 @@
 #include "Sprite.h"
 #include "GLTexture.h"
 
+#include <vector>
+
 enum class GameState {
 	PLAY,
 	EXIT
@@ -37,11 +39,9 @@ private:
 	float _mouseX;
 	float _mouseY;
 
-	Sprite _sprite;
+	std::vector<Sprite*> _sprites;
 
 	GLSLProgram _colorProgram;
-
-	GLTexture _playerTexture;
 
 	float _time;
 };

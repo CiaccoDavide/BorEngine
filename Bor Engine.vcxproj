@@ -124,7 +124,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainGame.cpp" />
     <ClCompile Include="picoPNG.cpp" />
+    <ClCompile Include="ResourcesManager.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TextureCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Errors.h" />
@@ -134,7 +136,9 @@
     <ClInclude Include="picoPNG.h" />
     <ClInclude Include="IOManager.h" />
     <ClInclude Include="MainGame.h" />
+    <ClInclude Include="ResourcesManager.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TextureCache.h" />
     <ClInclude Include="Vertex.h" />
   </ItemGroup>
   <ItemGroup>

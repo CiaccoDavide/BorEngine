@@ -3,7 +3,6 @@
 #include "MainGame.h"
 #include "Sprite.h"
 #include "Errors.h"
-#include "ImageLoader.h"
 
 MainGame::MainGame() :
 	_window(nullptr),
@@ -29,9 +28,21 @@ void MainGame::run()
 	float spritePixelSize_width = 210;
 	float spritePixelSize_height = 210;
 
-	_sprite.init(0.0f, 0.0f, 2.0f * spritePixelSize_width / (float)_screenWidth, 2.0f * spritePixelSize_height / (float)_screenHeight); // just testing
+	_sprites.push_back(new Sprite());
+	_sprites.back()->init(0.5f, 0.0f, 2.0f * spritePixelSize_width / (float)_screenWidth, 2.0f * spritePixelSize_height / (float)_screenHeight, "./Textures/test_png_icon/icon.png"); // just testing
 
-	_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon.png");
+	_sprites.push_back(new Sprite());
+	_sprites.back()->init(-0.5f, 0.0f, 1.0f * spritePixelSize_width / (float)_screenWidth, 1.0f * spritePixelSize_height / (float)_screenHeight, "./Textures/test_png_icon/icon.png");
+
+
+	for (int i = 0; i < 1000; i++)
+	{
+		_sprites.push_back(new Sprite());
+		_sprites.back()->init(-0.9f+0.001f*i, -0.8f + 0.001f*i, 1.0f * spritePixelSize_width / (float)_screenWidth + 0.001f*i, 1.0f * spritePixelSize_height / (float)_screenHeight + 0.001f*i, "./Textures/test_png_icon/icon.png");
+	}
+
+
+	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon.png");
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency.png");
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency_fades.png");
 
@@ -99,7 +110,7 @@ void MainGame::processInput()
 			_gameState = GameState::EXIT;
 			break;
 		case SDL_MOUSEMOTION:
-			std::cout << evnt.motion.x << " " << evnt.motion.y << std::endl;
+			std::cout << "\r Mouse Position: " << evnt.motion.x << " " << evnt.motion.y;
 			_mouseX = evnt.motion.x;
 			_mouseY = evnt.motion.y;
 			break;
@@ -115,15 +126,17 @@ void MainGame::drawGame()
 	_colorProgram.use();
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, _playerTexture.id);
+
 	GLint textureLocation = _colorProgram.getUniformLocation("tex");
 	glUniform1i(textureLocation, 0);
 
-	 GLuint timeLocation = _colorProgram.getUniformLocation("time");
+	GLuint timeLocation = _colorProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, _time);
 
-
-	_sprite.draw();
+	for (int i = 0; i < _sprites.size(); i++)
+	{
+		_sprites[i]->draw();
+	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
