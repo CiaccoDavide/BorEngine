@@ -54,6 +54,8 @@ void MainGame::initSystems()
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // against flickering!
+
 	_window = SDL_CreateWindow("Bor Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, _screenWidth, _screenHeight, SDL_WINDOW_OPENGL);
 
 	if (_window == nullptr)
@@ -73,9 +75,12 @@ void MainGame::initSystems()
 		fatalError("Could not initialize Glew!");
 	}
 
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1); // against flickering!
+	
+	std::printf("\n ### OpenGL Version: %s ###\n\n", glGetString(GL_VERSION));
 
 	glClearColor(0.569f, 0.204f, 0.192f, 1.0f); // set the background color, will be applied whenever GL_COLOR_BUFFER_BIT will be called
+
+	SDL_GL_SetSwapInterval(0); // turn on VSYNC
 
 	initShaders();
 }
