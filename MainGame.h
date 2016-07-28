@@ -29,6 +29,7 @@ private:
 	void processInput();
 	void drawGame();
 	void initShaders();
+	void calculateFPS();
 
 	SDL_Window* _window;
 	int _screenWidth;
@@ -44,5 +45,10 @@ private:
 	GLSLProgram _colorProgram;
 
 	float _time;
+
+	float _fps;
+	float _frameTime;
+
+	float _maxFPS;
 };
 

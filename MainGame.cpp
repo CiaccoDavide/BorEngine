@@ -9,7 +9,8 @@ MainGame::MainGame() :
 	_screenWidth(480),
 	_screenHeight(320),
 	_gameState(GameState::PLAY),
-	_time(0)
+	_time(0),
+	_maxFPS(60.0f)
 {
 
 
@@ -35,10 +36,10 @@ void MainGame::run()
 	_sprites.back()->init(-0.5f, 0.0f, 1.0f * spritePixelSize_width / (float)_screenWidth, 1.0f * spritePixelSize_height / (float)_screenHeight, "./Textures/test_png_icon/icon.png");
 
 
-	for (int i = 0; i < 1000; i++)
+	for (int i = 0; i < 100; i++)
 	{
 		_sprites.push_back(new Sprite());
-		_sprites.back()->init(-0.9f+0.001f*i, -0.8f + 0.001f*i, 1.0f * spritePixelSize_width / (float)_screenWidth + 0.001f*i, 1.0f * spritePixelSize_height / (float)_screenHeight + 0.001f*i, "./Textures/test_png_icon/icon.png");
+		_sprites.back()->init(-0.9f + 0.001f*i, -0.8f + 0.001f*i, 1.0f * spritePixelSize_width / (float)_screenWidth + 0.001f*i, 1.0f * spritePixelSize_height / (float)_screenHeight + 0.001f*i, "./Textures/test_png_icon/icon.png");
 	}
 
 
@@ -93,9 +94,25 @@ void MainGame::gameLoop()
 {
 	while (_gameState != GameState::EXIT)
 	{
+		float startTicks = SDL_GetTicks();
+
 		processInput();
 		_time += 0.001f; // arbitrary time for now...
 		drawGame();
+		calculateFPS();
+		static int frameCounter = 0;
+		frameCounter++;
+		if (frameCounter == 10)
+		{
+			std::cout << "\r FPS: " << _fps << "                                          ";
+			frameCounter = 0;
+		}
+
+		float frameTicks = SDL_GetTicks() - startTicks;
+		if (1000.0f / _maxFPS > frameTicks)
+		{
+			SDL_Delay(1000.0f / _maxFPS - frameTicks);
+		}
 	}
 }
 void MainGame::processInput()
@@ -110,7 +127,7 @@ void MainGame::processInput()
 			_gameState = GameState::EXIT;
 			break;
 		case SDL_MOUSEMOTION:
-			std::cout << "\r Mouse Position: " << evnt.motion.x << " " << evnt.motion.y;
+			std::cout << "\r Mouse Position: " << evnt.motion.x << " " << evnt.motion.y << "                     ";
 			_mouseX = evnt.motion.x;
 			_mouseY = evnt.motion.y;
 			break;
@@ -143,4 +160,50 @@ void MainGame::drawGame()
 	_colorProgram.unuse();
 
 	SDL_GL_SwapWindow(_window); // for swapping the double buffer (against flickering)
+}
+
+
+void MainGame::calculateFPS()
+{
+	static const int NUM_SAMPLES = 10;
+	static float frameTimes[NUM_SAMPLES];
+	static int currentFrame = 0;
+	static float prevTicks = SDL_GetTicks();
+	float currentTicks;
+	currentTicks = SDL_GetTicks();
+
+	_frameTime = currentTicks - prevTicks;
+
+	frameTimes[currentFrame%NUM_SAMPLES] = _frameTime;
+
+	prevTicks = currentTicks;
+
+	int count;
+
+	currentFrame++;
+
+	if (currentFrame < NUM_SAMPLES)
+	{
+		count = currentFrame;
+	}
+	else
+	{
+		count = NUM_SAMPLES;
+	}
+	float frameTimeAverage = 0;
+	for (int i = 0; i < count; i++)
+	{
+		frameTimeAverage += frameTimes[i];
+	}
+	frameTimeAverage /= count;
+
+	if (frameTimeAverage > 0)
+	{
+		_fps = 1000.0f / frameTimeAverage;
+	}
+	else
+	{
+		_fps = 0.0f;
+	}
+
 }
