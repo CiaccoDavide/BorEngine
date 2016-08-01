@@ -70,7 +70,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(SolutionDir)dependencies/include/;$(SolutionDir)BorEngine/;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)dependencies/include/;$(SolutionDir);$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)dependencies/lib/;$(SolutionDir)Debug/;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

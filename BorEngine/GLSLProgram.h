@@ -3,30 +3,33 @@
 #include <string>
 #include <GL/glew.h>
 
-class GLSLProgram
+namespace BorEngine
 {
-public:
-	GLSLProgram();
-	~GLSLProgram();
-	
-	void compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
-	void linkShaders();
+	class GLSLProgram
+	{
+	public:
+		GLSLProgram();
+		~GLSLProgram();
 
-	void addAttribute(const std::string& attributeName);
+		void compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath);
+		void linkShaders();
 
-	GLint getUniformLocation(const std::string& uniformName);
+		void addAttribute(const std::string& attributeName);
 
-	void use();
-	void unuse();
+		GLint getUniformLocation(const std::string& uniformName);
 
-private:
-	int _numAttributes;
+		void use();
+		void unuse();
 
-	void compileShader(const std::string& filePath, GLuint id); // type& is a reference
+	private:
+		int _numAttributes;
 
-	GLuint _programID;
+		void compileShader(const std::string& filePath, GLuint id); // type& is a reference
 
-	GLuint _vertexShaderID;
-	GLuint _fragmentShaderID;
-};
+		GLuint _programID;
 
+		GLuint _vertexShaderID;
+		GLuint _fragmentShaderID;
+	};
+
+}

@@ -3,12 +3,13 @@
 #include "TextureCache.h"
 #include <string>
 
-class ResourcesManager
+namespace BorEngine
 {
-public:
-	static GLTexture getTexture(std::string texturePath);
-	static GLuint boundTexture;
-private:
-	static TextureCache _textureCache;
-};
-
+	class ResourcesManager
+	{
+	public:
+		static GLTexture getTexture(std::string texturePath);
+	private:
+		static TextureCache _textureCache;
+	};
+}

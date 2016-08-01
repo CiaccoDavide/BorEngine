@@ -3,10 +3,11 @@
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 
-#include "GLSLProgram.h"
-
-#include "Sprite.h"
-#include "GLTexture.h"
+#include <BorEngine\BorEngine.h>
+#include <BorEngine\GLSLProgram.h>
+#include <BorEngine\Sprite.h>
+#include <BorEngine\GLTexture.h>
+#include <BorEngine\Window.h>
 
 #include <vector>
 
@@ -31,7 +32,7 @@ private:
 	void initShaders();
 	void calculateFPS();
 
-	SDL_Window* _window;
+	BorEngine::Window _window;
 	int _screenWidth;
 	int _screenHeight;
 
@@ -40,9 +41,9 @@ private:
 	float _mouseX;
 	float _mouseY;
 
-	std::vector<Sprite*> _sprites;
+	std::vector<BorEngine::Sprite*> _sprites;
 
-	GLSLProgram _colorProgram;
+	BorEngine::GLSLProgram _colorProgram;
 
 	float _time;
 
@@ -51,4 +52,3 @@ private:
 
 	float _maxFPS;
 };
-

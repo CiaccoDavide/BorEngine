@@ -2,4 +2,7 @@
 
 #include <string>
 
-extern void fatalError(std::string errorString);
+namespace BorEngine
+{
+	extern void fatalError(std::string errorString);
+}

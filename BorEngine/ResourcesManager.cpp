@@ -1,9 +1,11 @@
 #include "ResourcesManager.h"
 
-
-GLTexture ResourcesManager::getTexture(std::string texturePath)
+namespace BorEngine
 {
-	return _textureCache.getTexture(texturePath);
+	TextureCache ResourcesManager::_textureCache;
+
+	GLTexture ResourcesManager::getTexture(std::string texturePath)
+	{
+		return _textureCache.getTexture(texturePath);
+	}
 }
-GLuint  ResourcesManager::boundTexture;
-TextureCache ResourcesManager::_textureCache;
