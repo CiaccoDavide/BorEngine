@@ -8,7 +8,7 @@ namespace BorEngine
 {
 	enum WindowFlags
 	{
-		INVISIBLE = 0x1,
+		MINIMIZED = 0x1,
 		FULLSCREEN = 0x2,
 		BORDERLESS = 0x4
 	};

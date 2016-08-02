@@ -49,7 +49,7 @@ void MainGame::initSystems()
 {
 	BorEngine::init();
 
-	_window.create("Bor Engine", _screenWidth, _screenHeight, BorEngine::FULLSCREEN);
+	_window.create("Bor Engine", _screenWidth, _screenHeight, BorEngine::MINIMIZED);
 
 	initShaders();
 }

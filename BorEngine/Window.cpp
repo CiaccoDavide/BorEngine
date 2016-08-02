@@ -15,7 +15,7 @@ namespace BorEngine
 	{
 		Uint32 windowFlags = SDL_WINDOW_OPENGL;
 
-		if (flags & INVISIBLE)
+		if (flags & MINIMIZED)
 		{
 			windowFlags |= SDL_WINDOW_MINIMIZED;
 		}
