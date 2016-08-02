@@ -9,7 +9,7 @@ namespace BorEngine
 	enum WindowFlags
 	{
 		DEFAULT = 0,
-		MINIMIZED = 0x1,
+		MINIMIZED = 0x1, // when the game starts minimized the sprites are not rendered...why?
 		FULLSCREEN = 0x2,
 		BORDERLESS = 0x4
 	};

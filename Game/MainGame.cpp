@@ -128,10 +128,10 @@ void MainGame::processInput()
 				_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
 				break;
 			case SDLK_q:
-				_camera.setScale(_camera.getScale() + SCALE_SPEED);
+				_camera.setScale(_camera.getScale() - SCALE_SPEED);
 				break;
 			case SDLK_e:
-				_camera.setScale(_camera.getScale() - SCALE_SPEED);
+				_camera.setScale(_camera.getScale() + SCALE_SPEED);
 				break;
 			default:
 				break;
