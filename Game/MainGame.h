@@ -8,6 +8,7 @@
 #include <BorEngine\Sprite.h>
 #include <BorEngine\GLTexture.h>
 #include <BorEngine\Window.h>
+#include <BorEngine\Camera2D.h>
 
 #include <vector>
 
@@ -51,4 +52,6 @@ private:
 	float _frameTime;
 
 	float _maxFPS;
+
+	BorEngine::Camera2D _camera;
 };
