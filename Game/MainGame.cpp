@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <BorEngine\Errors.h>
+#include <BorEngine\ResourcesManager.h>
 
 MainGame::MainGame() :
 	_screenWidth(480),
@@ -21,30 +22,10 @@ MainGame::~MainGame()
 void MainGame::run()
 {
 	initSystems();
-
-	float spritePixelSize_width = 210;
-	float spritePixelSize_height = 210;
-
-	_sprites.push_back(new BorEngine::Sprite());
-	_sprites.back()->init(210.0f, 180.0f, 2.0f * spritePixelSize_width, 2.0f * spritePixelSize_height, "./Textures/test_png_icon/icon_transparency_fades.png"); // just testing
-
-	_sprites.push_back(new BorEngine::Sprite());
-	_sprites.back()->init(110.0f, 110.0f, 1.0f * spritePixelSize_width, 1.0f * spritePixelSize_height, "./Textures/test_png_icon/icon_transparency_fades.png");
-
-
-	/*for (int i = 0; i < 100; i++)
-	{
-		_sprites.push_back(new BorEngine::Sprite());
-		_sprites.back()->init(0.0f, 0.0f, (float)_screenWidth + 0.001f*i, (float)_screenHeight + 0.001f*i, "./Textures/test_png_icon/icon.png");
-	}*/
-
-
-	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon.png");
-	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency.png");
-	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency_fades.png");
-
-	gameLoop();
+	gameLoop(); // will return only when the game ends!
 }
+
+static BorEngine::GLTexture texture;
 
 void MainGame::initSystems()
 {
@@ -53,6 +34,10 @@ void MainGame::initSystems()
 	_window.create("Bor Engine", _screenWidth, _screenHeight, BorEngine::DEFAULT);
 
 	initShaders();
+
+	_spriteBatch.init();
+
+	texture = BorEngine::ResourcesManager::getTexture("./Textures/test_png_icon/icon_transparency_fades.png");
 }
 
 void MainGame::initShaders()
@@ -154,7 +139,7 @@ void MainGame::drawGame()
 	glUniform1i(textureLocation, 0);
 
 	GLuint timeLocation = _colorProgram.getUniformLocation("time");
-	glUniform1f(timeLocation, _time*300);
+	glUniform1f(timeLocation, _time * 300);
 
 	// set the camera matrix
 	GLuint pLocation = _colorProgram.getUniformLocation("P");
@@ -162,10 +147,27 @@ void MainGame::drawGame()
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 
-	for (int i = 0; i < (int)_sprites.size(); i++)
-	{
-		_sprites[i]->draw();
+	_spriteBatch.begin();
+
+	glm::vec4 pos(0.0f, 0.0f, 100.0f, 100.0f);
+	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
+	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon.png");
+	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency.png");
+	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency_fades.png");
+	BorEngine::Color color;
+	color.r = 255;
+	color.g = 255;
+	color.b = 255;
+	color.a = 255;
+
+	for (int i = 0; i < 1000; i++) {
+		_spriteBatch.draw(pos , uv, texture.id, 0.0f, color);
+		_spriteBatch.draw(pos - glm::vec4(150, 0, 0, 0), uv, texture.id, 0.0f, color);
+		//std::cout << "\nDRAWing SPRITE "<< i;
 	}
+
+	_spriteBatch.end();
+	_spriteBatch.renderBatch();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 

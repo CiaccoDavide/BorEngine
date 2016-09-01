@@ -9,6 +9,7 @@
 #include <BorEngine\GLTexture.h>
 #include <BorEngine\Window.h>
 #include <BorEngine\Camera2D.h>
+#include <BorEngine\SpriteBatch.h>
 
 #include <vector>
 
@@ -42,16 +43,12 @@ private:
 	float _mouseX;
 	float _mouseY;
 
-	std::vector<BorEngine::Sprite*> _sprites;
-
-	BorEngine::GLSLProgram _colorProgram;
-
-	float _time;
-
 	float _fps;
+	float _maxFPS;
+	float _time;
 	float _frameTime;
 
-	float _maxFPS;
-
+	BorEngine::GLSLProgram _colorProgram;
 	BorEngine::Camera2D _camera;
+	BorEngine::SpriteBatch _spriteBatch;
 };
