@@ -13,6 +13,8 @@ namespace BorEngine
 		void init(int screenWidth, int screenHeight);
 		void update();
 
+		glm::vec2 screenToWorldCoords(glm::vec2 screenCoords);
+
 		void setPosition(const glm::vec2& newPosition)
 		{
 			_position = newPosition;

@@ -13,7 +13,7 @@ namespace BorEngine
 		_screenHeight(120)
 	{
 	}
-
+	 
 
 	Camera2D::~Camera2D()
 	{
@@ -38,5 +38,13 @@ namespace BorEngine
 
 			_needsMatrixUpdate = false;
 		}
+	}
+
+	glm::vec2 Camera2D::screenToWorldCoords(glm::vec2 screenCoords)
+	{
+		screenCoords -= glm::vec2(_screenWidth / 2, _screenHeight / 2);
+		screenCoords /= _scale;
+		screenCoords += _position;
+		return screenCoords;
 	}
 }

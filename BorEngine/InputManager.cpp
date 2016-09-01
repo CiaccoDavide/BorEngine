@@ -5,7 +5,7 @@ namespace BorEngine
 
 
 
-	InputManager::InputManager()
+	InputManager::InputManager() : _mouseCoords(0.0f)
 	{
 	}
 
@@ -22,6 +22,12 @@ namespace BorEngine
 	{
 		_keyMap[keyID] = false;
 	}
+	void InputManager::setMouseCoords(float x, float y)
+	{
+		_mouseCoords.x = x;
+		_mouseCoords.y = y;
+	}
+
 	bool InputManager::isKeyDown(unsigned int keyID)
 	{
 		/*auto it = _keyMap.find(keyID);
@@ -35,4 +41,5 @@ namespace BorEngine
 			return _keyMap[keyID];
 		return false;
 	}
+
 }
