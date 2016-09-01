@@ -136,8 +136,8 @@ void MainGame::drawGame()
 	GLint textureLocation = _colorProgram.getUniformLocation("tex");
 	glUniform1i(textureLocation, 0);
 
-	GLuint timeLocation = _colorProgram.getUniformLocation("time");
-	glUniform1f(timeLocation, _time * 300);
+	/*GLuint timeLocation = _colorProgram.getUniformLocation("time");
+	glUniform1f(timeLocation, _time * 300);*/
 
 	// set the camera matrix
 	GLuint pLocation = _colorProgram.getUniformLocation("P");
@@ -159,8 +159,9 @@ void MainGame::drawGame()
 	color.a = 255;
 
 	//for (int i = 0; i < 1000; i++) {
-		_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
-		_spriteBatch.draw(pos - glm::vec4(150, 0, 0, 0), uv, texture.id, 0.0f, color);
+		_spriteBatch.draw(pos - glm::vec4(50, 50, 0, 0), uv, texture.id, 0.0f, color);
+		_spriteBatch.draw(pos - glm::vec4(75, 75, 0, 0), uv, texture.id, 0.0f, color);
+		_spriteBatch.draw(pos - glm::vec4(100, 100, 0, 0), uv, texture.id, 0.0f, color);
 		//std::cout << "\nDRAWing SPRITE "<< i;
 	//}
 
