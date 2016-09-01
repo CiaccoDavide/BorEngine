@@ -14,6 +14,7 @@
 #include <vector>
 
 #include <BorEngine\InputManager.h>
+#include <BorEngine\Timing.h>
 
 enum class GameState {
 	PLAY,
@@ -34,7 +35,6 @@ private:
 	void processInput();
 	void drawGame();
 	void initShaders();
-	void calculateFPS();
 
 	BorEngine::Window _window;
 	int _screenWidth;
@@ -46,10 +46,10 @@ private:
 	float _mouseY;
 	BorEngine::InputManager _inputManager;
 
+	BorEngine::FPSLimiter _fpsLimiter;
+	float _time;
 	float _fps;
 	float _maxFPS;
-	float _time;
-	float _frameTime;
 
 	BorEngine::GLSLProgram _colorProgram;
 	BorEngine::Camera2D _camera;

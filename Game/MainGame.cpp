@@ -36,6 +36,7 @@ void MainGame::initSystems()
 	initShaders();
 
 	_spriteBatch.init();
+	_fpsLimiter.init(_maxFPS);
 
 	texture = BorEngine::ResourcesManager::getTexture("./Textures/test_png_icon/icon_transparency_fades.png");
 }
@@ -54,14 +55,15 @@ void MainGame::gameLoop()
 {
 	while (_gameState != GameState::EXIT)
 	{
-		float startTicks = (float)SDL_GetTicks();
+		_fpsLimiter.begin();
 
 		processInput();
 		_time += 0.001f; // arbitrary time for now...
 
 		_camera.update();
 		drawGame();
-		calculateFPS();
+
+		_fps = _fpsLimiter.end();
 
 		static int frameCounter = 0;
 		frameCounter++;
@@ -71,11 +73,7 @@ void MainGame::gameLoop()
 			frameCounter = 0;
 		}
 
-		float frameTicks = SDL_GetTicks() - startTicks;
-		if (1000.0f / _maxFPS > frameTicks)
-		{
-			SDL_Delay((Uint32)(1000.0f / _maxFPS - frameTicks));
-		}
+
 	}
 }
 void MainGame::processInput()
@@ -160,11 +158,11 @@ void MainGame::drawGame()
 	color.b = 255;
 	color.a = 255;
 
-	for (int i = 0; i < 1000; i++) {
+	//for (int i = 0; i < 1000; i++) {
 		_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
 		_spriteBatch.draw(pos - glm::vec4(150, 0, 0, 0), uv, texture.id, 0.0f, color);
 		//std::cout << "\nDRAWing SPRITE "<< i;
-	}
+	//}
 
 	_spriteBatch.end();
 	_spriteBatch.renderBatch();
@@ -176,48 +174,3 @@ void MainGame::drawGame()
 	_window.swapBuffer(); // for swapping the double buffer (against flickering)
 }
 
-
-void MainGame::calculateFPS()
-{
-	static const int NUM_SAMPLES = 10;
-	static float frameTimes[NUM_SAMPLES];
-	static int currentFrame = 0;
-	static float prevTicks = (float)SDL_GetTicks();
-	float currentTicks;
-	currentTicks = (float)SDL_GetTicks();
-
-	_frameTime = currentTicks - prevTicks;
-
-	frameTimes[currentFrame%NUM_SAMPLES] = _frameTime;
-
-	prevTicks = currentTicks;
-
-	int count;
-
-	currentFrame++;
-
-	if (currentFrame < NUM_SAMPLES)
-	{
-		count = currentFrame;
-	}
-	else
-	{
-		count = NUM_SAMPLES;
-	}
-	float frameTimeAverage = 0;
-	for (int i = 0; i < count; i++)
-	{
-		frameTimeAverage += frameTimes[i];
-	}
-	frameTimeAverage /= count;
-
-	if (frameTimeAverage > 0)
-	{
-		_fps = 1000.0f / frameTimeAverage;
-	}
-	else
-	{
-		_fps = 0.0f;
-	}
-
-}
