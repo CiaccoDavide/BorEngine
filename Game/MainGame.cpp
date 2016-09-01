@@ -80,7 +80,7 @@ void MainGame::gameLoop()
 }
 void MainGame::processInput()
 {
-	const float CAMERA_SPEED = 10.0f;
+	const float CAMERA_SPEED = 2.0f;
 	const float SCALE_SPEED = 0.1f;
 
 	SDL_Event evnt;
@@ -98,32 +98,32 @@ void MainGame::processInput()
 			_mouseY = (float)evnt.motion.y;
 			break;
 		case SDL_KEYDOWN:
-			switch (evnt.key.keysym.sym)
-			{
-			case SDLK_w:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0, CAMERA_SPEED));
-				break;
-			case SDLK_a:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
-				break;
-			case SDLK_s:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(0.0, -CAMERA_SPEED));
-				break;
-			case SDLK_d:
-				_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
-				break;
-			case SDLK_q:
-				_camera.setScale(_camera.getScale() - SCALE_SPEED);
-				break;
-			case SDLK_e:
-				_camera.setScale(_camera.getScale() + SCALE_SPEED);
-				break;
-			default:
-				break;
-			}
+			_inputManager.keyDown(evnt.key.keysym.sym);
+			break;
+		case SDL_KEYUP:
+			_inputManager.keyUp(evnt.key.keysym.sym);
 			break;
 		}
 	}
+
+	if (_inputManager.isKeyDown(SDLK_w))
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0, CAMERA_SPEED));
+
+	if (_inputManager.isKeyDown(SDLK_a))
+		_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+
+	if (_inputManager.isKeyDown(SDLK_s))
+		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0, -CAMERA_SPEED));
+
+	if (_inputManager.isKeyDown(SDLK_d))
+		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+
+	if (_inputManager.isKeyDown(SDLK_q))
+		_camera.setScale(_camera.getScale() - SCALE_SPEED);
+
+	if (_inputManager.isKeyDown(SDLK_e))
+		_camera.setScale(_camera.getScale() + SCALE_SPEED);
+
 }
 
 void MainGame::drawGame()
@@ -161,7 +161,7 @@ void MainGame::drawGame()
 	color.a = 255;
 
 	for (int i = 0; i < 1000; i++) {
-		_spriteBatch.draw(pos , uv, texture.id, 0.0f, color);
+		_spriteBatch.draw(pos, uv, texture.id, 0.0f, color);
 		_spriteBatch.draw(pos - glm::vec4(150, 0, 0, 0), uv, texture.id, 0.0f, color);
 		//std::cout << "\nDRAWing SPRITE "<< i;
 	}

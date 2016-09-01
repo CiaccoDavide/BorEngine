@@ -13,6 +13,8 @@
 
 #include <vector>
 
+#include <BorEngine\InputManager.h>
+
 enum class GameState {
 	PLAY,
 	EXIT
@@ -42,6 +44,7 @@ private:
 
 	float _mouseX;
 	float _mouseY;
+	BorEngine::InputManager _inputManager;
 
 	float _fps;
 	float _maxFPS;
