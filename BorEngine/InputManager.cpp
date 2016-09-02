@@ -14,6 +14,16 @@ namespace BorEngine
 	{
 	}
 
+	void InputManager::update()
+	{
+		// it: iterator
+		//for (auto it = _keyMap.begin(); it != _keyMap.end(); it++)
+		for (auto it : _keyMap)
+		{
+			_prevKeyMap[it.first] = it.second;
+		}
+	}
+
 	void InputManager::keyDown(unsigned int keyID)
 	{
 		_keyMap[keyID] = true;
@@ -41,5 +51,14 @@ namespace BorEngine
 			return _keyMap[keyID];
 		return false;
 	}
-
+	bool InputManager::isKeyPressed(unsigned int keyID)
+	{
+		return  (isKeyDown(keyID) && !_wasKeyDown(keyID));
+	}
+	bool InputManager::_wasKeyDown(unsigned int keyID)
+	{
+		if (_prevKeyMap.find(keyID) != _prevKeyMap.end())
+			return _prevKeyMap[keyID];
+		return false;
+	}
 }

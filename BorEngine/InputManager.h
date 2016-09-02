@@ -12,9 +12,12 @@ namespace BorEngine
 		InputManager();
 		~InputManager();
 
+		void update();
+
 		void keyDown(unsigned int keyID);
 		void keyUp(unsigned int keyID);
 		bool isKeyDown(unsigned int keyID);
+		bool isKeyPressed(unsigned int keyID);
 
 		void setMouseCoords(float x, float y);
 
@@ -23,7 +26,9 @@ namespace BorEngine
 
 	private:
 		std::unordered_map<unsigned int, bool> _keyMap;
+		std::unordered_map<unsigned int, bool> _prevKeyMap;
 		glm::vec2 _mouseCoords;
+		bool _wasKeyDown(unsigned int keyID);
 	};
 
 }

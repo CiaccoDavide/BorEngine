@@ -54,7 +54,7 @@ namespace BorEngine
 		void end();
 
 		// void draw(glm::vec2 position, glm::vec2 size, ...);
-		void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const Color& color);
+		void draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGB8& color);
 
 		void renderBatch();
 

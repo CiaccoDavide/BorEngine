@@ -56,7 +56,7 @@ void MainGame::gameLoop()
 	while (_gameState != GameState::EXIT)
 	{
 		_fpsLimiter.begin();
-
+		_inputManager.update();
 		processInput();
 		_time += 0.001f; // arbitrary time for now...
 
@@ -129,7 +129,7 @@ void MainGame::processInput()
 	if (_inputManager.isKeyDown(SDLK_e))
 		_camera.setScale(_camera.getScale() + SCALE_SPEED);
 
-	if (_inputManager.isKeyDown(SDL_BUTTON_LEFT))
+	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
 		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
 		mouseCoords = _camera.screenToWorldCoords(mouseCoords);
@@ -167,11 +167,12 @@ void MainGame::drawGame()
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon.png");
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency.png");
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency_fades.png");
-	BorEngine::Color color;
-	color.r = 255;
+	
+	BorEngine::ColorRGB8 color = BorEngine::ColorRGB8(255,255,255);
+	/*color.r = 255;
 	color.g = 255;
 	color.b = 255;
-	color.a = 255;
+	color.a = 255;*/
 
 	//for (int i = 0; i < 1000; i++) {
 		_spriteBatch.draw(pos - glm::vec4(50, 50, 0, 0), uv, texture.id, 0.0f, color);
