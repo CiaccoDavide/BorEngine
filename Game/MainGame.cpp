@@ -5,6 +5,8 @@
 #include <BorEngine\Errors.h>
 #include <BorEngine\ResourcesManager.h>
 
+#include <algorithm>
+
 MainGame::MainGame() :
 	_screenWidth(480),
 	_screenHeight(320),
@@ -53,12 +55,36 @@ void MainGame::initShaders()
 
 void MainGame::gameLoop()
 {
+	const int  MAX_PHYSICS_STEPS = 6;
+	const float DESIRED_FPS = 60;
+	const float MS_PER_SEC = 1000;
+	const float DESIRED_FRAMETIME = MS_PER_SEC / DESIRED_FPS;
+	float prevTicks = SDL_GetTicks();
+	const float MAX_DELTA_TIME = 1.0f;
+
 	while (_gameState != GameState::EXIT)
 	{
 		_fpsLimiter.begin();
+
+
+		float newTicks = SDL_GetTicks();
+		float frameTime = SDL_GetTicks() - prevTicks;
+		prevTicks = newTicks;
+		float totalDeltaTime = frameTime / DESIRED_FRAMETIME; 
+
 		_inputManager.update();
 		processInput();
-		_time += 0.001f; // arbitrary time for now...
+
+		int i = 0;
+		while (totalDeltaTime > 0 && i < MAX_PHYSICS_STEPS)
+		{
+			float deltaTime = std::min(totalDeltaTime,MAX_DELTA_TIME);
+			totalDeltaTime -= deltaTime;
+
+			// here you can update the deltaTime dependant functions!
+
+			i++;
+		}
 
 		_camera.update();
 		drawGame();
@@ -167,19 +193,19 @@ void MainGame::drawGame()
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon.png");
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency.png");
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency_fades.png");
-	
-	BorEngine::ColorRGB8 color = BorEngine::ColorRGB8(255,255,255);
+
+	BorEngine::ColorRGB8 color = BorEngine::ColorRGB8(255, 255, 255);
 	/*color.r = 255;
 	color.g = 255;
 	color.b = 255;
 	color.a = 255;*/
 
 	//for (int i = 0; i < 1000; i++) {
-		_spriteBatch.draw(pos - glm::vec4(50, 50, 0, 0), uv, texture.id, 0.0f, color);
-		_spriteBatch.draw(pos - glm::vec4(75, 75, 0, 0), uv, texture.id, 0.0f, color);
-		_spriteBatch.draw(pos - glm::vec4(100, 100, 0, 0), uv, texture.id, 0.0f, color);
-		//std::cout << "\nDRAWing SPRITE "<< i;
-	//}
+	_spriteBatch.draw(pos - glm::vec4(50, 50, 0, 0), uv, texture.id, 0.0f, color);
+	_spriteBatch.draw(pos - glm::vec4(75, 75, 0, 0), uv, texture.id, 0.0f, color);
+	_spriteBatch.draw(pos - glm::vec4(100, 100, 0, 0), uv, texture.id, 0.0f, color);
+	//std::cout << "\nDRAWing SPRITE "<< i;
+//}
 
 	_spriteBatch.end();
 	_spriteBatch.renderBatch();
