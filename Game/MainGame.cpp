@@ -7,14 +7,21 @@
 
 #include <algorithm>
 
+#include <BorEngine\SpriteFont.h>
+
 MainGame::MainGame() :
-	_screenWidth(480),
-	_screenHeight(320),
+	_screenWidth(880),
+	_screenHeight(620),
 	_gameState(GameState::PLAY),
 	_time(0),
-	_maxFPS(60.0f)
+	_maxFPS(60.0f),
+	_updatesCount(0)
 {
 	_camera.init(_screenWidth, _screenHeight);
+	_hudCamera.init(_screenWidth, _screenHeight);
+	//_hudCamera.setPosition(glm::vec2(_screenWidth/2,0));
+	_hudCamera.setPosition(glm::vec2(0, 0));
+	//_textBuffer[256];
 }
 
 MainGame::~MainGame()
@@ -38,6 +45,11 @@ void MainGame::initSystems()
 	initShaders();
 
 	_spriteBatch.init();
+	_hudSpriteBatch.init();
+
+	// initialize sprite font
+	_spriteFont = new BorEngine::SpriteFont("Fonts/chau.ttf", 32);
+
 	_fpsLimiter.init(_maxFPS);
 
 	texture = BorEngine::ResourcesManager::getTexture("./Textures/test_png_icon/icon_transparency_fades.png");
@@ -87,6 +99,8 @@ void MainGame::gameLoop()
 		}
 
 		_camera.update();
+
+		_hudCamera.update();
 		drawGame();
 
 		_fps = _fpsLimiter.end();
@@ -204,7 +218,7 @@ void MainGame::drawGame()
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency.png");
 	//_playerTexture = ImageLoader::loadPNG("./Textures/test_png_icon/icon_transparency_fades.png");
 
-	BorEngine::ColorRGB8 color = BorEngine::ColorRGB8(255, 255, 255);
+	BorEngine::ColorRGBA8 color = BorEngine::ColorRGBA8(255, 255, 255, 255);
 	/*color.r = 255;
 	color.g = 255;
 	color.b = 255;
@@ -228,6 +242,8 @@ void MainGame::drawGame()
 
 	_spriteBatch.end();
 	_spriteBatch.renderBatch();
+	_updatesCount++;
+	drawHUD();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -236,3 +252,46 @@ void MainGame::drawGame()
 	_window.swapBuffer(); // for swapping the double buffer (against flickering)
 }
 
+void MainGame::drawHUD() {
+
+	GLuint pLocation = _colorProgram.getUniformLocation("P");
+	glm::mat4 cameraMatrix = _hudCamera.getCameraMatrix();
+	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
+
+	_hudSpriteBatch.begin();
+
+	//char buffer[256];
+	// string, position, scale, color, horizontal-alignment
+	writeText("Hello, HUD!", glm::vec2(-1, -1), glm::vec2(1.0), BorEngine::ColorRGBA8(0, 0, 0, 255), BorEngine::Justification::MIDDLE);
+	writeText("Hello, HUD!", glm::vec2(0, 0), glm::vec2(1.0), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
+	writeText("Updates: %d", _updatesCount, glm::vec2(0, -40), glm::vec2(0.4), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
+	writeText("FPS: %d", _fps, glm::vec2(0, -60), glm::vec2(0.4), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
+
+	_hudSpriteBatch.end();
+	_hudSpriteBatch.renderBatch();
+}
+
+void MainGame::writeText(const char* str, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment) {
+	sprintf_s(_textBuffer, str);
+	_spriteFont->draw(
+		_hudSpriteBatch,
+		_textBuffer,
+		position,
+		scale,
+		0.0f,
+		color,
+		alignment
+	);
+}
+void MainGame::writeText(const char* str, int data, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment) {
+	sprintf_s(_textBuffer, str, data);
+	_spriteFont->draw(
+		_hudSpriteBatch,
+		_textBuffer,
+		position,
+		scale,
+		0.0f,
+		color,
+		alignment
+	);
+}

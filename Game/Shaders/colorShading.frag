@@ -20,7 +20,6 @@ void main(){
 //		fragmentColor.a
 //	) * textureColor;
 
-
-
 	color = fragmentColor * textureColor;
+
 }

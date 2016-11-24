@@ -16,6 +16,8 @@
 #include <BorEngine\InputManager.h>
 #include <BorEngine\Timing.h>
 
+#include <BorEngine\SpriteFont.h>
+
 enum class GameState {
 	PLAY,
 	EXIT
@@ -34,7 +36,10 @@ private:
 	void gameLoop();
 	void processInput();
 	void drawGame();
+	void drawHUD();
 	void initShaders();
+	void writeText(const char* str, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment);
+	void writeText(const char* str, int data, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment);
 
 	BorEngine::Window _window;
 	int _screenWidth;
@@ -53,5 +58,12 @@ private:
 
 	BorEngine::GLSLProgram _colorProgram;
 	BorEngine::Camera2D _camera;
+	BorEngine::Camera2D _hudCamera;
 	BorEngine::SpriteBatch _spriteBatch;
+
+	BorEngine::SpriteBatch _hudSpriteBatch;
+	BorEngine::SpriteFont* _spriteFont;
+
+	char _textBuffer[256];
+	int _updatesCount;
 };

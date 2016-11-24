@@ -12,10 +12,10 @@ namespace BorEngine
 		float y;
 	};
 
-	struct ColorRGB8
+	struct ColorRGBA8
 	{
-		ColorRGB8() : r(0), g(0), b(0) {}
-		ColorRGB8(GLubyte R, GLubyte G, GLubyte B) : r(R), g(G), b(B) {}
+		ColorRGBA8() : r(0), g(0), b(0), a(0) {}
+		ColorRGBA8(GLubyte R, GLubyte G, GLubyte B, GLubyte A) : r(R), g(G), b(B), a(A) {}
 		GLubyte r;
 		GLubyte g;
 		GLubyte b;
@@ -32,7 +32,7 @@ namespace BorEngine
 	{
 		Position position;
 
-		ColorRGB8 color;
+		ColorRGBA8 color;
 
 		UV uv;
 
