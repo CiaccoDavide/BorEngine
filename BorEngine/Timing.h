@@ -13,11 +13,11 @@ namespace BorEngine
 
 		void setMaxFPS(float maxFPS);
 	private:
-		void _calculateFPS();
+		void p_calculateFPS();
 
-		unsigned int _startTicks;
-		float _fps;
-		float _maxFPS;
-		float _frameTime;
+		unsigned int p_startTicks;
+		float p_fps;
+		float p_maxFPS;
+		float p_frameTime;
 	};
 }

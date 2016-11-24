@@ -19,27 +19,27 @@ namespace BorEngine
 
 		void setPosition(const glm::vec2& newPosition)
 		{
-			_position = newPosition;
-			_needsMatrixUpdate = true;
+			p_position = newPosition;
+			p_needsMatrixUpdate = true;
 		}
-		glm::vec2 getPosition() { return _position; }
+		glm::vec2 getPosition() { return p_position; }
 
 		void setScale(float newScale)
 		{
-			_scale = newScale;
-			_needsMatrixUpdate = true;
+			p_scale = newScale;
+			p_needsMatrixUpdate = true;
 		}
-		float getScale() { return _scale; }
+		float getScale() { return p_scale; }
 
-		glm::mat4 getCameraMatrix() { return _cameraMatrix; }
+		glm::mat4 getCameraMatrix() { return p_cameraMatrix; }
 
 	private:
-		int _screenWidth = 240;
-		int _screenHeight = 120;
-		bool _needsMatrixUpdate = true;
-		glm::vec2 _position = glm::vec2(0.0f, 0.0f);
-		glm::mat4 _cameraMatrix = glm::mat4(1.0f);
-		glm::mat4 _orthoMatrix = glm::mat4(1.0f);
-		float _scale = 1.0f;
+		int p_screenWidth = 1080;
+		int p_screenHeight = 640;
+		bool p_needsMatrixUpdate = true;
+		glm::vec2 p_position = glm::vec2(0.0f, 0.0f);
+		glm::mat4 p_cameraMatrix = glm::mat4(1.0f);
+		glm::mat4 p_orthoMatrix = glm::mat4(1.0f);
+		float p_scale = 1.0f;
 	};
 }

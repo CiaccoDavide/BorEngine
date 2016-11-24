@@ -14,32 +14,32 @@ namespace BorEngine
 
 	void Camera2D::init(int screenWidth, int screenHeight)
 	{
-		_screenWidth = screenWidth;
-		_screenHeight = screenHeight;
-		_orthoMatrix = glm::ortho(0.0f, (float)_screenWidth, 0.0f, (float)_screenHeight);
+		p_screenWidth = screenWidth;
+		p_screenHeight = screenHeight;
+		p_orthoMatrix = glm::ortho(0.0f, (float)p_screenWidth, 0.0f, (float)p_screenHeight);
 	}
 
 	void Camera2D::update()
 	{
-		if (_needsMatrixUpdate)
+		if (p_needsMatrixUpdate)
 		{
-			glm::vec3 translate(-_position.x + _screenWidth / 2, -_position.y + _screenHeight / 2, 0.0f);
-			_cameraMatrix = glm::translate(_orthoMatrix, translate);
+			glm::vec3 translate(-p_position.x + p_screenWidth / 2, -p_position.y + p_screenHeight / 2, 0.0f);
+			p_cameraMatrix = glm::translate(p_orthoMatrix, translate);
 
-			glm::vec3 scale(_scale, _scale, 1.0f);
-			_cameraMatrix = glm::scale(glm::mat4(1.0f), scale) * _cameraMatrix;
+			glm::vec3 scale(p_scale, p_scale, 1.0f);
+			p_cameraMatrix = glm::scale(glm::mat4(1.0f), scale) * p_cameraMatrix;
 
-			_needsMatrixUpdate = false;
+			p_needsMatrixUpdate = false;
 			//std::cout << "\n [  CAM  ] pos: " << _position.x << ", " << _position.y << " scale:" << _scale;
 		}
 	}
 
 	glm::vec2 Camera2D::screenToWorldCoords(glm::vec2 screenCoords)
 	{
-		screenCoords.y = _screenHeight - screenCoords.y;
-		screenCoords -= glm::vec2(_screenWidth / 2, _screenHeight / 2);
-		screenCoords /= _scale;
-		screenCoords += _position;
+		screenCoords.y = p_screenHeight - screenCoords.y;
+		screenCoords -= glm::vec2(p_screenWidth / 2, p_screenHeight / 2);
+		screenCoords /= p_scale;
+		screenCoords += p_position;
 		return screenCoords;
 	}
 
@@ -57,7 +57,7 @@ namespace BorEngine
 	// Simple AABB test to see if a box is in the camera view
 	bool Camera2D::isBoxInView(const glm::vec2& position, const glm::vec2& dimensions) {
 
-		glm::vec2 scaledScreenDimensions = glm::vec2(_screenWidth, _screenHeight) / (_scale);
+		glm::vec2 scaledScreenDimensions = glm::vec2(p_screenWidth, p_screenHeight) / (p_scale);
 
 		// The minimum distance before a collision occurs
 		const float MIN_DISTANCE_X = dimensions.x / 2.0f + scaledScreenDimensions.x / 2.0f;
@@ -66,7 +66,7 @@ namespace BorEngine
 		// Center position of the parameters
 		glm::vec2 centerPos = position + dimensions / 2.0f;
 		// Center position of the camera
-		glm::vec2 centerCameraPos = _position;
+		glm::vec2 centerCameraPos = p_position;
 		// Vector from the input to the camera
 		glm::vec2 distVec = centerPos - centerCameraPos;
 

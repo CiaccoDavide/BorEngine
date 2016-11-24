@@ -66,7 +66,7 @@ namespace BorEngine {
         void dispose();
 
         int getFontHeight() const {
-            return _fontHeight;
+            return p_fontHeight;
         }
 
         /// Measures the dimensions of the text
@@ -78,11 +78,11 @@ namespace BorEngine {
     private:
         static std::vector<int>* createRows(glm::ivec4* rects, int rectsLength, int r, int padding, int& w);
 
-        int _regStart, _regLength;
-        CharGlyph* _glyphs;
-        int _fontHeight;
+        int p_regStart, p_regLength;
+        CharGlyph* p_glyphs;
+        int p_fontHeight;
 
-        unsigned int _texID;
+        unsigned int p_texID;
     };
 
 }

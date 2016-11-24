@@ -18,13 +18,13 @@ namespace BorEngine
 		void draw();
 
 	private:
-		float _x;
-		float _y;
-		float _width;
-		float _height;
+		float p_x;
+		float p_y;
+		float p_width;
+		float p_height;
 
-		GLuint _vboID; // vertex buffer object ID
+		GLuint p_vboID; // vertex buffer object ID
 
-		GLTexture _texture;
+		GLTexture p_texture;
 	};
 }

@@ -37,13 +37,13 @@ namespace BorEngine {
             fflush(stderr);
             throw 281;
         }
-        _fontHeight = TTF_FontHeight(f);
-        _regStart = cs;
-        _regLength = ce - cs + 1;
+        p_fontHeight = TTF_FontHeight(f);
+        p_regStart = cs;
+        p_regLength = ce - cs + 1;
         int padding = size / 8;
 
         // First neasure all the regions
-        glm::ivec4* glyphRects = new glm::ivec4[_regLength];
+        glm::ivec4* glyphRects = new glm::ivec4[p_regLength];
         int i = 0, advance;
         for (char c = cs; c <= ce; c++) {
             TTF_GlyphMetrics(f, c, &glyphRects[i].x, &glyphRects[i].z, &glyphRects[i].y, &glyphRects[i].w, &advance);
@@ -57,9 +57,9 @@ namespace BorEngine {
         // Find best partitioning of glyphs
         int rows = 1, w, h, bestWidth = 0, bestHeight = 0, area = MAX_TEXTURE_RES * MAX_TEXTURE_RES, bestRows = 0;
         std::vector<int>* bestPartition = nullptr;
-        while (rows <= _regLength) {
-            h = rows * (padding + _fontHeight) + padding;
-            auto gr = createRows(glyphRects, _regLength, rows, padding, w);
+        while (rows <= p_regLength) {
+            h = rows * (padding + p_fontHeight) + padding;
+            auto gr = createRows(glyphRects, p_regLength, rows, padding, w);
 
             // Desire a power of 2 texture
             w = closestPow2(w);
@@ -94,8 +94,8 @@ namespace BorEngine {
             throw 282;
         }
         // Create the texture
-        glGenTextures(1, &_texID);
-        glBindTexture(GL_TEXTURE_2D, _texID);
+        glGenTextures(1, &p_texID);
+        glBindTexture(GL_TEXTURE_2D, p_texID);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, bestWidth, bestHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
         // Now draw all the glyphs
@@ -130,7 +130,7 @@ namespace BorEngine {
 
                 lx += glyphRects[gi].z + padding;
             }
-            ly += _fontHeight + padding;
+            ly += p_fontHeight + padding;
         }
 
         // Draw the unsupported glyph
@@ -148,20 +148,20 @@ namespace BorEngine {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         // Create spriteBatch glyphs
-        _glyphs = new CharGlyph[_regLength + 1];
-        for (i = 0; i < _regLength; i++) {
-            _glyphs[i].character = (char)(cs + i);
-            _glyphs[i].size = glm::vec2(glyphRects[i].z, glyphRects[i].w);
-            _glyphs[i].uvRect = glm::vec4(
+        p_glyphs = new CharGlyph[p_regLength + 1];
+        for (i = 0; i < p_regLength; i++) {
+            p_glyphs[i].character = (char)(cs + i);
+            p_glyphs[i].size = glm::vec2(glyphRects[i].z, glyphRects[i].w);
+            p_glyphs[i].uvRect = glm::vec4(
                 (float)glyphRects[i].x / (float)bestWidth,
                 (float)glyphRects[i].y / (float)bestHeight,
                 (float)glyphRects[i].z / (float)bestWidth,
                 (float)glyphRects[i].w / (float)bestHeight
                 );
         }
-        _glyphs[_regLength].character = ' ';
-        _glyphs[_regLength].size = _glyphs[0].size;
-        _glyphs[_regLength].uvRect = glm::vec4(0, 0, (float)rs / (float)bestWidth, (float)rs / (float)bestHeight);
+        p_glyphs[p_regLength].character = ' ';
+        p_glyphs[p_regLength].size = p_glyphs[0].size;
+        p_glyphs[p_regLength].uvRect = glm::vec4(0, 0, (float)rs / (float)bestWidth, (float)rs / (float)bestHeight);
 
         glBindTexture(GL_TEXTURE_2D, 0);
         delete[] glyphRects;
@@ -170,13 +170,13 @@ namespace BorEngine {
     }
 
     void SpriteFont::dispose() {
-        if (_texID != 0) {
-            glDeleteTextures(1, &_texID);
-            _texID = 0;
+        if (p_texID != 0) {
+            glDeleteTextures(1, &p_texID);
+            p_texID = 0;
         }
-        if (_glyphs) {
-            delete[] _glyphs;
-            _glyphs = nullptr;
+        if (p_glyphs) {
+            delete[] p_glyphs;
+            p_glyphs = nullptr;
         }
     }
 
@@ -212,21 +212,21 @@ namespace BorEngine {
     }
 
     glm::vec2 SpriteFont::measure(const char* s) {
-        glm::vec2 size(0, _fontHeight);
+        glm::vec2 size(0, p_fontHeight);
         float cw = 0;
         for (int si = 0; s[si] != 0; si++) {
             char c = s[si];
             if (s[si] == '\n') {
-                size.y += _fontHeight;
+                size.y += p_fontHeight;
                 if (size.x < cw)
                     size.x = cw;
                 cw = 0;
             } else {
                 // Check for correct glyph
-                int gi = c - _regStart;
-                if (gi < 0 || gi >= _regLength)
-                    gi = _regLength;
-                cw += _glyphs[gi].size.x;
+                int gi = c - p_regStart;
+                if (gi < 0 || gi >= p_regLength)
+                    gi = p_regLength;
+                cw += p_glyphs[gi].size.x;
             }
         }
         if (size.x < cw)
@@ -246,16 +246,16 @@ namespace BorEngine {
         for (int si = 0; s[si] != 0; si++) {
             char c = s[si];
             if (s[si] == '\n') {
-                tp.y += _fontHeight * scaling.y;
+                tp.y += p_fontHeight * scaling.y;
                 tp.x = position.x;
             } else {
                 // Check for correct glyph
-                int gi = c - _regStart;
-                if (gi < 0 || gi >= _regLength)
-                    gi = _regLength;
-                glm::vec4 destRect(tp, _glyphs[gi].size * scaling);
-                batch.draw(destRect, _glyphs[gi].uvRect, _texID, depth, tint);
-                tp.x += _glyphs[gi].size.x * scaling.x;
+                int gi = c - p_regStart;
+                if (gi < 0 || gi >= p_regLength)
+                    gi = p_regLength;
+                glm::vec4 destRect(tp, p_glyphs[gi].size * scaling);
+                batch.draw(destRect, p_glyphs[gi].uvRect, p_texID, depth, tint);
+                tp.x += p_glyphs[gi].size.x * scaling.x;
             }
         }
     }

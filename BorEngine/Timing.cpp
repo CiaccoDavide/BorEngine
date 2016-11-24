@@ -15,26 +15,26 @@ namespace BorEngine
 
 	void FPSLimiter::begin()
 	{
-		_startTicks = SDL_GetTicks();
+		p_startTicks = SDL_GetTicks();
 	}
 
 	float FPSLimiter::end()
 	{
-		float frameTicks = SDL_GetTicks() - _startTicks;
-		if (1000.0f / _maxFPS > frameTicks)
+		float frameTicks = SDL_GetTicks() - p_startTicks;
+		if (1000.0f / p_maxFPS > frameTicks)
 		{
-			SDL_Delay((Uint32)(1000.0f / _maxFPS - frameTicks));
+			SDL_Delay((Uint32)(1000.0f / p_maxFPS - frameTicks));
 		}
-		_calculateFPS();
-		return _fps;
+		p_calculateFPS();
+		return p_fps;
 	}
 
 	void FPSLimiter::setMaxFPS(float maxFPS)
 	{
-		_maxFPS = maxFPS;
+		p_maxFPS = maxFPS;
 	}
 
-	void FPSLimiter::_calculateFPS()
+	void FPSLimiter::p_calculateFPS()
 	{
 		static const int NUM_SAMPLES = 10;
 		static float frameTimes[NUM_SAMPLES];
@@ -43,9 +43,9 @@ namespace BorEngine
 		float currentTicks;
 		currentTicks = (float)SDL_GetTicks();
 
-		_frameTime = currentTicks - prevTicks;
+		p_frameTime = currentTicks - prevTicks;
 
-		frameTimes[currentFrame%NUM_SAMPLES] = _frameTime;
+		frameTimes[currentFrame%NUM_SAMPLES] = p_frameTime;
 
 		prevTicks = currentTicks;
 
@@ -70,11 +70,11 @@ namespace BorEngine
 
 		if (frameTimeAverage > 0)
 		{
-			_fps = 1000.0f / frameTimeAverage;
+			p_fps = 1000.0f / frameTimeAverage;
 		}
 		else
 		{
-			_fps = 0.0f;
+			p_fps = 0.0f;
 		}
 	}
 }

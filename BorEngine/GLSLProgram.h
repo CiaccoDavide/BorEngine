@@ -22,13 +22,13 @@ namespace BorEngine
 		void unuse();
 
 	private:
-		int _numAttributes = 0;
+		int p_numAttributes = 0;
 
 		void compileShader(const std::string& filePath, GLuint id); // type& is a reference
 
-		GLuint _programID = 0;
+		GLuint p_programID = 0;
 
-		GLuint _vertexShaderID = 0;
-		GLuint _fragmentShaderID = 0;
+		GLuint p_vertexShaderID = 0;
+		GLuint p_fragmentShaderID = 0;
 	};
 }

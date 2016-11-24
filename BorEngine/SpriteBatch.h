@@ -89,14 +89,14 @@ namespace BorEngine
 		static bool compareBackToFront(Glyph* a, Glyph* b);
 		static bool compareTexture(Glyph* a, Glyph* b);
 
-		GLuint _vbo = 0; // vertex buffer object
-		GLuint _vao = 0; // vertex array object
+		GLuint p_vbo = 0; // vertex buffer object
+		GLuint p_vao = 0; // vertex array object
 
-		GlyphSortType _sortType;
+		GlyphSortType p_sortType;
 
-		std::vector<Glyph*> _glyphPointers; // for sorting glyphs
-		std::vector<Glyph> _glyphs; // actual glyphs
+		std::vector<Glyph*> p_glyphPointers; // for sorting glyphs
+		std::vector<Glyph> p_glyphs; // actual glyphs
 
-		std::vector<RenderBatch> _renderBatches;
+		std::vector<RenderBatch> p_renderBatches;
 	};
 }

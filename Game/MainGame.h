@@ -42,28 +42,28 @@ private:
 	void writeText(const char* str, int data, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment);
 
 	BorEngine::Window _window;
-	int _screenWidth = 1080;
-	int _screenHeight = 640;
+	int p_screenWidth = 1080;
+	int p_screenHeight = 640;
 
-	GameState _gameState = GameState::PLAY;
+	GameState p_gameState = GameState::PLAY;
 
-	float _mouseX;
-	float _mouseY;
-	BorEngine::InputManager _inputManager;
+	float p_mouseX;
+	float p_mouseY;
+	BorEngine::InputManager p_inputManager;
 
-	BorEngine::FPSLimiter _fpsLimiter;
-	float _time = 0;
-	float _fps;
-	float _maxFPS = 60.0f;
+	BorEngine::FPSLimiter p_fpsLimiter;
+	float p_time = 0;
+	float p_fps;
+	float p_maxFPS = 60.0f;
 
-	BorEngine::GLSLProgram _colorProgram;
-	BorEngine::Camera2D _camera;
-	BorEngine::Camera2D _hudCamera;
-	BorEngine::SpriteBatch _spriteBatch;
+	BorEngine::GLSLProgram p_colorProgram;
+	BorEngine::Camera2D p_camera;
+	BorEngine::Camera2D p_hudCamera;
+	BorEngine::SpriteBatch p_spriteBatch;
 
-	BorEngine::SpriteBatch _hudSpriteBatch;
-	BorEngine::SpriteFont* _spriteFont;
+	BorEngine::SpriteBatch p_hudSpriteBatch;
+	BorEngine::SpriteFont* p_spriteFont;
 
-	char _textBuffer[256];
-	int _updatesCount = 0;
+	char p_textBuffer[256];
+	int p_updatesCount = 0;
 };

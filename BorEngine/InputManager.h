@@ -22,13 +22,13 @@ namespace BorEngine
 		void setMouseCoords(float x, float y);
 
 		// mettiamo const perche' questa funzione non cambia nulla dello stato dell'inputManager!
-		glm::vec2 getMouseCoords() const { return _mouseCoords; };
+		glm::vec2 getMouseCoords() const { return p_mouseCoords; };
 
 	private:
-		std::unordered_map<unsigned int, bool> _keyMap;
-		std::unordered_map<unsigned int, bool> _prevKeyMap;
-		glm::vec2 _mouseCoords = glm::vec2(0.0f);
-		bool _wasKeyDown(unsigned int keyID);
+		std::unordered_map<unsigned int, bool> p_keyMap;
+		std::unordered_map<unsigned int, bool> p_prevKeyMap;
+		glm::vec2 p_mouseCoords = glm::vec2(0.0f);
+		bool p_wasKeyDown(unsigned int keyID);
 	};
 
 }

@@ -8,31 +8,31 @@ namespace BorEngine
 {
 	Sprite::Sprite()
 	{
-		_vboID = 0;
+		p_vboID = 0;
 	}
 
 
 	Sprite::~Sprite()
 	{
-		if (_vboID != 0)
+		if (p_vboID != 0)
 		{
-			glDeleteBuffers(1, &_vboID);
+			glDeleteBuffers(1, &p_vboID);
 		}
 	}
 
 
 	void Sprite::init(float x, float y, float width, float height, std::string texturePath)
 	{
-		_x = x;
-		_y = y;
-		_width = width;
-		_height = height;
+		p_x = x;
+		p_y = y;
+		p_width = width;
+		p_height = height;
 
-		_texture = ResourcesManager::getTexture(texturePath);
+		p_texture = ResourcesManager::getTexture(texturePath);
 
-		if (_vboID == 0) // if the vbo is still to be created
+		if (p_vboID == 0) // if the vbo is still to be created
 		{
-			glGenBuffers(1, &_vboID);
+			glGenBuffers(1, &p_vboID);
 		}
 
 		Vertex vertexData[6]; // 6x 6y coords
@@ -78,7 +78,7 @@ namespace BorEngine
 		vertexData[1].setColor(228, 255, 140, 255);
 		vertexData[4].setColor(150, 90, 250, 255);
 
-		glBindBuffer(GL_ARRAY_BUFFER, _vboID);
+		glBindBuffer(GL_ARRAY_BUFFER, p_vboID);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -86,9 +86,9 @@ namespace BorEngine
 
 	void Sprite::draw()
 	{
-		glBindTexture(GL_TEXTURE_2D, _texture.id);
+		glBindTexture(GL_TEXTURE_2D, p_texture.id);
 
-		glBindBuffer(GL_ARRAY_BUFFER, _vboID);
+		glBindBuffer(GL_ARRAY_BUFFER, p_vboID);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);

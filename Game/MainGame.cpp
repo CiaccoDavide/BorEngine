@@ -11,10 +11,10 @@
 
 MainGame::MainGame()
 {
-	_camera.init(_screenWidth, _screenHeight);
-	_hudCamera.init(_screenWidth, _screenHeight);
+	p_camera.init(p_screenWidth, p_screenHeight);
+	p_hudCamera.init(p_screenWidth, p_screenHeight);
 	//_hudCamera.setPosition(glm::vec2(_screenWidth/2,0));
-	_hudCamera.setPosition(glm::vec2(0, 0));
+	p_hudCamera.setPosition(glm::vec2(0, 0));
 	//_textBuffer[256];
 }
 
@@ -34,29 +34,29 @@ void MainGame::initSystems()
 {
 	BorEngine::init();
 
-	_window.create("Bor Engine", _screenWidth, _screenHeight, BorEngine::DEFAULT);
+	_window.create("Bor Engine", p_screenWidth, p_screenHeight, BorEngine::DEFAULT);
 
 	initShaders();
 
-	_spriteBatch.init();
-	_hudSpriteBatch.init();
+	p_spriteBatch.init();
+	p_hudSpriteBatch.init();
 
 	// initialize sprite font
-	_spriteFont = new BorEngine::SpriteFont("Fonts/chau.ttf", 32);
+	p_spriteFont = new BorEngine::SpriteFont("Fonts/chau.ttf", 32);
 
-	_fpsLimiter.init(_maxFPS);
+	p_fpsLimiter.init(p_maxFPS);
 
 	texture = BorEngine::ResourcesManager::getTexture("./Textures/test_png_icon/icon_transparency_fades.png");
 }
 
 void MainGame::initShaders()
 {
-	_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
-	_colorProgram.addAttribute("vertexPosition");
-	_colorProgram.addAttribute("vertexColor");
-	_colorProgram.addAttribute("vertexUV");
+	p_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
+	p_colorProgram.addAttribute("vertexPosition");
+	p_colorProgram.addAttribute("vertexColor");
+	p_colorProgram.addAttribute("vertexUV");
 
-	_colorProgram.linkShaders();
+	p_colorProgram.linkShaders();
 }
 
 void MainGame::gameLoop()
@@ -68,9 +68,9 @@ void MainGame::gameLoop()
 	float prevTicks = SDL_GetTicks();
 	const float MAX_DELTA_TIME = 1.0f;
 
-	while (_gameState != GameState::EXIT)
+	while (p_gameState != GameState::EXIT)
 	{
-		_fpsLimiter.begin();
+		p_fpsLimiter.begin();
 
 
 		float newTicks = SDL_GetTicks();
@@ -78,7 +78,7 @@ void MainGame::gameLoop()
 		prevTicks = newTicks;
 		float totalDeltaTime = frameTime / DESIRED_FRAMETIME;
 
-		_inputManager.update();
+		p_inputManager.update();
 		processInput();
 
 		int i = 0;
@@ -92,18 +92,18 @@ void MainGame::gameLoop()
 			i++;
 		}
 
-		_camera.update();
+		p_camera.update();
 
-		_hudCamera.update();
+		p_hudCamera.update();
 		drawGame();
 
-		_fps = _fpsLimiter.end();
+		p_fps = p_fpsLimiter.end();
 
 		static int frameCounter = 0;
 		frameCounter++;
 		if (frameCounter == 50)
 		{
-			std::cout << "\n [ INFO  ] FPS: " << _fps << "                                          ";
+			std::cout << "\n [ INFO  ] FPS: " << p_fps << "                                          ";
 			frameCounter = 0;
 		}
 
@@ -122,30 +122,30 @@ void MainGame::processInput()
 		switch (evnt.type)
 		{
 		case SDL_QUIT:
-			_gameState = GameState::EXIT;
+			p_gameState = GameState::EXIT;
 			break;
 		case SDL_MOUSEMOTION:
 			//std::cout << "\r Mouse Position: " << evnt.motion.x << " " << evnt.motion.y << "                     ";
-			_mouseX = (float)evnt.motion.x;
-			_mouseY = (float)evnt.motion.y;
-			_inputManager.setMouseCoords((float)evnt.motion.x, (float)evnt.motion.y);
+			p_mouseX = (float)evnt.motion.x;
+			p_mouseY = (float)evnt.motion.y;
+			p_inputManager.setMouseCoords((float)evnt.motion.x, (float)evnt.motion.y);
 			break;
 		case SDL_KEYDOWN:
-			_inputManager.keyDown(evnt.key.keysym.sym);
+			p_inputManager.keyDown(evnt.key.keysym.sym);
 			break;
 		case SDL_KEYUP:
-			_inputManager.keyUp(evnt.key.keysym.sym);
+			p_inputManager.keyUp(evnt.key.keysym.sym);
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			_inputManager.keyDown(evnt.button.button);
+			p_inputManager.keyDown(evnt.button.button);
 			break;
 		case SDL_MOUSEBUTTONUP:
-			_inputManager.keyUp(evnt.button.button);
+			p_inputManager.keyUp(evnt.button.button);
 			break;
 		}
 	}
 
-	if (_inputManager.isKeyDown(SDLK_LSHIFT)) {
+	if (p_inputManager.isKeyDown(SDLK_LSHIFT)) {
 		CAMERA_SPEED = 12.0f;
 		SCALE_SPEED = 0.8f;
 	}
@@ -154,29 +154,29 @@ void MainGame::processInput()
 		SCALE_SPEED = 0.1f;
 	}
 
-	if (_inputManager.isKeyDown(SDLK_w))
-		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0, CAMERA_SPEED));
+	if (p_inputManager.isKeyDown(SDLK_w))
+		p_camera.setPosition(p_camera.getPosition() + glm::vec2(0.0, CAMERA_SPEED));
 
-	if (_inputManager.isKeyDown(SDLK_a))
-		_camera.setPosition(_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
+	if (p_inputManager.isKeyDown(SDLK_a))
+		p_camera.setPosition(p_camera.getPosition() + glm::vec2(-CAMERA_SPEED, 0.0f));
 
-	if (_inputManager.isKeyDown(SDLK_s))
-		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0, -CAMERA_SPEED));
+	if (p_inputManager.isKeyDown(SDLK_s))
+		p_camera.setPosition(p_camera.getPosition() + glm::vec2(0.0, -CAMERA_SPEED));
 
-	if (_inputManager.isKeyDown(SDLK_d))
-		_camera.setPosition(_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
+	if (p_inputManager.isKeyDown(SDLK_d))
+		p_camera.setPosition(p_camera.getPosition() + glm::vec2(CAMERA_SPEED, 0.0f));
 
-	if (_inputManager.isKeyDown(SDLK_q))
-		_camera.setScale(_camera.getScale() - SCALE_SPEED);
+	if (p_inputManager.isKeyDown(SDLK_q))
+		p_camera.setScale(p_camera.getScale() - SCALE_SPEED);
 
-	if (_inputManager.isKeyDown(SDLK_e))
-		_camera.setScale(_camera.getScale() + SCALE_SPEED);
+	if (p_inputManager.isKeyDown(SDLK_e))
+		p_camera.setScale(p_camera.getScale() + SCALE_SPEED);
 
 
-	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
+	if (p_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
-		glm::vec2 mouseCoords = _inputManager.getMouseCoords();
-		mouseCoords = _camera.screenToWorldCoords(mouseCoords);
+		glm::vec2 mouseCoords = p_inputManager.getMouseCoords();
+		mouseCoords = p_camera.screenToWorldCoords(mouseCoords);
 		std::cout << "\n [ INPUT ] Click on (" << mouseCoords.x << ", " << mouseCoords.y << ")";
 	}
 
@@ -188,23 +188,23 @@ void MainGame::drawGame()
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // bit-wise or | 
 
-	_colorProgram.use();
+	p_colorProgram.use();
 
 	glActiveTexture(GL_TEXTURE0);
 
-	GLint textureLocation = _colorProgram.getUniformLocation("tex");
+	GLint textureLocation = p_colorProgram.getUniformLocation("tex");
 	glUniform1i(textureLocation, 0);
 
 	/*GLuint timeLocation = _colorProgram.getUniformLocation("time");
 	glUniform1f(timeLocation, _time * 300);*/
 
 	// set the camera matrix
-	GLuint pLocation = _colorProgram.getUniformLocation("P");
-	glm::mat4 cameraMatrix = _camera.getCameraMatrix();
+	GLuint pLocation = p_colorProgram.getUniformLocation("P");
+	glm::mat4 cameraMatrix = p_camera.getCameraMatrix();
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
 
-	_spriteBatch.begin();
+	p_spriteBatch.begin();
 
 	glm::vec4 pos(0.0f, 0.0f, 100.0f, 100.0f);
 	glm::vec4 uv(0.0f, 0.0f, 1.0f, 1.0f);
@@ -228,48 +228,48 @@ void MainGame::drawGame()
 			spriteSize.x = pos.z;
 			spriteSize.y = pos.w;
 			glm::vec4 rokt(spritePosition.x, spritePosition.y, 100.0f, 100.0f);
-			if (_camera.isBoxInView(spritePosition, spriteSize))
-				_spriteBatch.draw(rokt, uv, texture.id, 0.0f, color);
+			if (p_camera.isBoxInView(spritePosition, spriteSize))
+				p_spriteBatch.draw(rokt, uv, texture.id, 0.0f, color);
 			//std::cout << "\nDRAWing SPRITE "<< i;
 		}
 	}
 
-	_spriteBatch.end();
-	_spriteBatch.renderBatch();
-	_updatesCount++;
+	p_spriteBatch.end();
+	p_spriteBatch.renderBatch();
+	p_updatesCount++;
 	drawHUD();
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	_colorProgram.unuse();
+	p_colorProgram.unuse();
 
 	_window.swapBuffer(); // for swapping the double buffer (against flickering)
 }
 
 void MainGame::drawHUD() {
 
-	GLuint pLocation = _colorProgram.getUniformLocation("P");
-	glm::mat4 cameraMatrix = _hudCamera.getCameraMatrix();
+	GLuint pLocation = p_colorProgram.getUniformLocation("P");
+	glm::mat4 cameraMatrix = p_hudCamera.getCameraMatrix();
 	glUniformMatrix4fv(pLocation, 1, GL_FALSE, &(cameraMatrix[0][0]));
 
-	_hudSpriteBatch.begin();
+	p_hudSpriteBatch.begin();
 
 	//char buffer[256];
 	// string, position, scale, color, horizontal-alignment
 	writeText("Hello, HUD!", glm::vec2(-1, -1), glm::vec2(1.0), BorEngine::ColorRGBA8(0, 0, 0, 255), BorEngine::Justification::MIDDLE);
 	writeText("Hello, HUD!", glm::vec2(0, 0), glm::vec2(1.0), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
-	writeText("Updates: %d", _updatesCount, glm::vec2(0, -40), glm::vec2(0.4), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
-	writeText("FPS: %d", _fps, glm::vec2(0, -60), glm::vec2(0.4), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
+	writeText("Updates: %d", p_updatesCount, glm::vec2(0, -40), glm::vec2(0.4), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
+	writeText("FPS: %d", p_fps, glm::vec2(0, -60), glm::vec2(0.4), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
 
-	_hudSpriteBatch.end();
-	_hudSpriteBatch.renderBatch();
+	p_hudSpriteBatch.end();
+	p_hudSpriteBatch.renderBatch();
 }
 
 void MainGame::writeText(const char* str, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment) {
-	sprintf_s(_textBuffer, str);
-	_spriteFont->draw(
-		_hudSpriteBatch,
-		_textBuffer,
+	sprintf_s(p_textBuffer, str);
+	p_spriteFont->draw(
+		p_hudSpriteBatch,
+		p_textBuffer,
 		position,
 		scale,
 		0.0f,
@@ -278,10 +278,10 @@ void MainGame::writeText(const char* str, glm::vec2 position, glm::vec2 scale, B
 	);
 }
 void MainGame::writeText(const char* str, int data, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment) {
-	sprintf_s(_textBuffer, str, data);
-	_spriteFont->draw(
-		_hudSpriteBatch,
-		_textBuffer,
+	sprintf_s(p_textBuffer, str, data);
+	p_spriteFont->draw(
+		p_hudSpriteBatch,
+		p_textBuffer,
 		position,
 		scale,
 		0.0f,

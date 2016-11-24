@@ -28,15 +28,15 @@ namespace BorEngine
 			windowFlags |= SDL_WINDOW_BORDERLESS;
 		}
 
-		_sdlWindow = SDL_CreateWindow(windowName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, windowFlags);
+		p_sdlWindow = SDL_CreateWindow(windowName.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, windowFlags);
 
-		if (_sdlWindow == nullptr)
+		if (p_sdlWindow == nullptr)
 		{
 			fatalError("SDL window could not be created!");
 		}
 
 		// we need an openGL context
-		SDL_GLContext glContext = SDL_GL_CreateContext(_sdlWindow);
+		SDL_GLContext glContext = SDL_GL_CreateContext(p_sdlWindow);
 		if (glContext == nullptr)
 		{
 			fatalError("SDL_GL context could not be created!");
@@ -63,6 +63,6 @@ namespace BorEngine
 
 	void Window::swapBuffer()
 	{
-		SDL_GL_SwapWindow(_sdlWindow);
+		SDL_GL_SwapWindow(p_sdlWindow);
 	}
 }

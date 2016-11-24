@@ -18,67 +18,67 @@ namespace BorEngine
 
 	void GLSLProgram::compileShaders(const std::string& vertexShaderFilePath, const std::string& fragmentShaderFilePath)
 	{
-		_programID = glCreateProgram();
+		p_programID = glCreateProgram();
 
-		_vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
-		if (_vertexShaderID == 0)
+		p_vertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+		if (p_vertexShaderID == 0)
 			fatalError("Vertex shader failed to be created!");
 
-		_fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
-		if (_fragmentShaderID == 0)
+		p_fragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+		if (p_fragmentShaderID == 0)
 			fatalError("Fragment shader failed to be created!");
 
-		compileShader(vertexShaderFilePath, _vertexShaderID);
-		compileShader(fragmentShaderFilePath, _fragmentShaderID);
+		compileShader(vertexShaderFilePath, p_vertexShaderID);
+		compileShader(fragmentShaderFilePath, p_fragmentShaderID);
 	}
 
 	void GLSLProgram::linkShaders()
 	{
 
 		//Attach our shaders to our program
-		glAttachShader(_programID, _vertexShaderID);
-		glAttachShader(_programID, _fragmentShaderID);
+		glAttachShader(p_programID, p_vertexShaderID);
+		glAttachShader(p_programID, p_fragmentShaderID);
 
 		//Link our program
-		glLinkProgram(_programID);
+		glLinkProgram(p_programID);
 
 		//Note the different functions here: glGetProgram* instead of glGetShader*.
 		GLint isLinked = 0;
-		glGetProgramiv(_programID, GL_LINK_STATUS, (int *)&isLinked);
+		glGetProgramiv(p_programID, GL_LINK_STATUS, (int *)&isLinked);
 		if (isLinked == GL_FALSE)
 		{
 			GLint maxLength = 0;
-			glGetProgramiv(_programID, GL_INFO_LOG_LENGTH, &maxLength);
+			glGetProgramiv(p_programID, GL_INFO_LOG_LENGTH, &maxLength);
 
 			//The maxLength includes the NULL character
 			std::vector<GLchar> errorLog(maxLength);
-			glGetProgramInfoLog(_programID, maxLength, &maxLength, &errorLog[0]);
+			glGetProgramInfoLog(p_programID, maxLength, &maxLength, &errorLog[0]);
 
 			//We don't need the program anymore.
-			glDeleteProgram(_programID);
+			glDeleteProgram(p_programID);
 			//Don't leak shaders either.
-			glDeleteShader(_vertexShaderID);
-			glDeleteShader(_fragmentShaderID);
+			glDeleteShader(p_vertexShaderID);
+			glDeleteShader(p_fragmentShaderID);
 
 			fatalError("Shaders failed to link:");
 			std::printf("%s\n", &(errorLog[0]));
 		}
 		//Always detach shaders after a successful link.
-		glDetachShader(_programID, _vertexShaderID);
-		glDetachShader(_programID, _fragmentShaderID);
-		glDeleteShader(_vertexShaderID);
-		glDeleteShader(_fragmentShaderID);
+		glDetachShader(p_programID, p_vertexShaderID);
+		glDetachShader(p_programID, p_fragmentShaderID);
+		glDeleteShader(p_vertexShaderID);
+		glDeleteShader(p_fragmentShaderID);
 
 	}
 
 	void GLSLProgram::addAttribute(const std::string& attributeName)
 	{
-		glBindAttribLocation(_programID, _numAttributes++, attributeName.c_str());
+		glBindAttribLocation(p_programID, p_numAttributes++, attributeName.c_str());
 	}
 
 	GLint GLSLProgram::getUniformLocation(const std::string& uniformName)
 	{
-		GLint location = glGetUniformLocation(_programID, uniformName.c_str());
+		GLint location = glGetUniformLocation(p_programID, uniformName.c_str());
 		if (location == GL_INVALID_INDEX)
 		{
 			fatalError("Uniform " + uniformName + " not found in shader...");
@@ -88,8 +88,8 @@ namespace BorEngine
 
 	void GLSLProgram::use()
 	{
-		glUseProgram(_programID);
-		for (int i = 0; i < _numAttributes; i++)
+		glUseProgram(p_programID);
+		for (int i = 0; i < p_numAttributes; i++)
 		{
 			glEnableVertexAttribArray(i);
 		}
@@ -98,7 +98,7 @@ namespace BorEngine
 	void GLSLProgram::unuse()
 	{
 		glUseProgram(0);
-		for (int i = 0; i < _numAttributes; i++)
+		for (int i = 0; i < p_numAttributes; i++)
 		{
 			glDisableVertexAttribArray(i);
 		}

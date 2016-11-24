@@ -18,24 +18,24 @@ namespace BorEngine
 	{
 		// it: iterator
 		//for (auto it = _keyMap.begin(); it != _keyMap.end(); it++)
-		for (auto it : _keyMap)
+		for (auto it : p_keyMap)
 		{
-			_prevKeyMap[it.first] = it.second;
+			p_prevKeyMap[it.first] = it.second;
 		}
 	}
 
 	void InputManager::keyDown(unsigned int keyID)
 	{
-		_keyMap[keyID] = true;
+		p_keyMap[keyID] = true;
 	}
 	void InputManager::keyUp(unsigned int keyID)
 	{
-		_keyMap[keyID] = false;
+		p_keyMap[keyID] = false;
 	}
 	void InputManager::setMouseCoords(float x, float y)
 	{
-		_mouseCoords.x = x;
-		_mouseCoords.y = y;
+		p_mouseCoords.x = x;
+		p_mouseCoords.y = y;
 	}
 
 	bool InputManager::isKeyDown(unsigned int keyID)
@@ -47,18 +47,18 @@ namespace BorEngine
 
 
 
-		if (_keyMap.find(keyID) != _keyMap.end())
-			return _keyMap[keyID];
+		if (p_keyMap.find(keyID) != p_keyMap.end())
+			return p_keyMap[keyID];
 		return false;
 	}
 	bool InputManager::isKeyPressed(unsigned int keyID)
 	{
-		return  (isKeyDown(keyID) && !_wasKeyDown(keyID));
+		return  (isKeyDown(keyID) && !p_wasKeyDown(keyID));
 	}
-	bool InputManager::_wasKeyDown(unsigned int keyID)
+	bool InputManager::p_wasKeyDown(unsigned int keyID)
 	{
-		if (_prevKeyMap.find(keyID) != _prevKeyMap.end())
-			return _prevKeyMap[keyID];
+		if (p_prevKeyMap.find(keyID) != p_prevKeyMap.end())
+			return p_prevKeyMap[keyID];
 		return false;
 	}
 }

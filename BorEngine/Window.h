@@ -24,11 +24,11 @@ namespace BorEngine
 
 		void swapBuffer();
 
-		int getScreenWidth() { return _screenWidth; }
-		int getScreenHeight() { return _screenHeight; }
+		int getScreenWidth() { return p_screenWidth; }
+		int getScreenHeight() { return p_screenHeight; }
 
 	private:
-		SDL_Window* _sdlWindow;
-		int _screenWidth, _screenHeight;
+		SDL_Window* p_sdlWindow;
+		int p_screenWidth, p_screenHeight;
 	};
 }
