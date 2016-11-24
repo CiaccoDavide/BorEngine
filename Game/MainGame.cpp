@@ -70,7 +70,7 @@ void MainGame::gameLoop()
 		float newTicks = SDL_GetTicks();
 		float frameTime = SDL_GetTicks() - prevTicks;
 		prevTicks = newTicks;
-		float totalDeltaTime = frameTime / DESIRED_FRAMETIME; 
+		float totalDeltaTime = frameTime / DESIRED_FRAMETIME;
 
 		_inputManager.update();
 		processInput();
@@ -78,7 +78,7 @@ void MainGame::gameLoop()
 		int i = 0;
 		while (totalDeltaTime > 0 && i < MAX_PHYSICS_STEPS)
 		{
-			float deltaTime = std::min(totalDeltaTime,MAX_DELTA_TIME);
+			float deltaTime = std::min(totalDeltaTime, MAX_DELTA_TIME);
 			totalDeltaTime -= deltaTime;
 
 			// here you can update the deltaTime dependant functions!
@@ -93,7 +93,7 @@ void MainGame::gameLoop()
 
 		static int frameCounter = 0;
 		frameCounter++;
-		if (frameCounter == 100)
+		if (frameCounter == 50)
 		{
 			std::cout << "\n [ INFO  ] FPS: " << _fps << "                                          ";
 			frameCounter = 0;
@@ -104,8 +104,8 @@ void MainGame::gameLoop()
 }
 void MainGame::processInput()
 {
-	const float CAMERA_SPEED = 2.0f;
-	const float SCALE_SPEED = 0.1f;
+	float CAMERA_SPEED = 2.0f;
+	float SCALE_SPEED = 0.1f;
 
 	SDL_Event evnt;
 	// mettiamo & perche' vuole ricevere un pointer!
@@ -137,6 +137,15 @@ void MainGame::processInput()
 		}
 	}
 
+	if (_inputManager.isKeyDown(SDLK_LSHIFT)) {
+		CAMERA_SPEED = 12.0f;
+		SCALE_SPEED = 0.8f;
+	}
+	else {
+		CAMERA_SPEED = 2.0f;
+		SCALE_SPEED = 0.1f;
+	}
+
 	if (_inputManager.isKeyDown(SDLK_w))
 		_camera.setPosition(_camera.getPosition() + glm::vec2(0.0, CAMERA_SPEED));
 
@@ -154,6 +163,7 @@ void MainGame::processInput()
 
 	if (_inputManager.isKeyDown(SDLK_e))
 		_camera.setScale(_camera.getScale() + SCALE_SPEED);
+
 
 	if (_inputManager.isKeyPressed(SDL_BUTTON_LEFT))
 	{
@@ -200,12 +210,21 @@ void MainGame::drawGame()
 	color.b = 255;
 	color.a = 255;*/
 
-	//for (int i = 0; i < 1000; i++) {
-	_spriteBatch.draw(pos - glm::vec4(50, 50, 0, 0), uv, texture.id, 0.0f, color);
-	_spriteBatch.draw(pos - glm::vec4(75, 75, 0, 0), uv, texture.id, 0.0f, color);
-	_spriteBatch.draw(pos - glm::vec4(100, 100, 0, 0), uv, texture.id, 0.0f, color);
-	//std::cout << "\nDRAWing SPRITE "<< i;
-//}
+	glm::vec2 spritePosition(pos.x, pos.y);
+	glm::vec2 spriteSize(pos.z, pos.w);
+
+	for (int spawn_y = 0; spawn_y < 10000; spawn_y += 120) {
+		for (int spawn_x = 0; spawn_x < 10000; spawn_x += 120) {
+			spritePosition.x = pos.x + spawn_x;
+			spritePosition.y = pos.y + spawn_y;
+			spriteSize.x = pos.z;
+			spriteSize.y = pos.w;
+			glm::vec4 rokt(spritePosition.x, spritePosition.y, 100.0f, 100.0f);
+			if (_camera.isBoxInView(spritePosition, spriteSize))
+				_spriteBatch.draw(rokt, uv, texture.id, 0.0f, color);
+			//std::cout << "\nDRAWing SPRITE "<< i;
+		}
+	}
 
 	_spriteBatch.end();
 	_spriteBatch.renderBatch();

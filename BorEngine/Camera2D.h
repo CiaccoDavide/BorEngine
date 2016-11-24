@@ -3,7 +3,7 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 namespace BorEngine
-{
+{ 
 	class Camera2D
 	{
 	public:
@@ -14,6 +14,8 @@ namespace BorEngine
 		void update();
 
 		glm::vec2 screenToWorldCoords(glm::vec2 screenCoords);
+
+		bool isBoxInView(const glm::vec2& position, const glm::vec2& size);
 
 		void setPosition(const glm::vec2& newPosition)
 		{

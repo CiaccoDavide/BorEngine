@@ -36,20 +36,40 @@ namespace BorEngine
 		}
 
 		Vertex vertexData[6]; // 6x 6y coords
-		// first triangle
-		vertexData[0].setPosition(x + width / 2.0f, y + height / 2.0f);
+		//// first triangle
+		//vertexData[0].setPosition(x + width / 2.0f, y + height / 2.0f);
+		//vertexData[0].setUV(1.0f, 1.0f);
+		//vertexData[1].setPosition(x - width / 2.0f, y + height / 2.0f);
+		//vertexData[1].setUV(0.0f, 1.0f);
+		//vertexData[2].setPosition(x - width / 2.0f, y - height / 2.0f);
+		//vertexData[2].setUV(0.0f, 0.0f);
+		//// second triangle
+		//vertexData[3].setPosition(x - width / 2.0f, y - height / 2.0f);
+		//vertexData[3].setUV(0.0f, 0.0f);
+		//vertexData[4].setPosition(x + width / 2.0f, y - height / 2.0f);
+		//vertexData[4].setUV(1.0f, 0.0f);
+		//vertexData[5].setPosition(x + width / 2.0f, y + height / 2.0f);
+		//vertexData[5].setUV(1.0f, 1.0f);
+
+
+
+		//// first triangle
+		vertexData[0].setPosition(x + width, y + height);
 		vertexData[0].setUV(1.0f, 1.0f);
-		vertexData[1].setPosition(x - width / 2.0f, y + height / 2.0f);
+		vertexData[1].setPosition(x, y + height);
 		vertexData[1].setUV(0.0f, 1.0f);
-		vertexData[2].setPosition(x - width / 2.0f, y - height / 2.0f);
+		vertexData[2].setPosition(x, y);
 		vertexData[2].setUV(0.0f, 0.0f);
 		// second triangle
-		vertexData[3].setPosition(x - width / 2.0f, y - height / 2.0f);
+		vertexData[3].setPosition(x, y);
 		vertexData[3].setUV(0.0f, 0.0f);
-		vertexData[4].setPosition(x + width / 2.0f, y - height / 2.0f);
+		vertexData[4].setPosition(x + width, y);
 		vertexData[4].setUV(1.0f, 0.0f);
-		vertexData[5].setPosition(x + width / 2.0f, y + height / 2.0f);
+		vertexData[5].setPosition(x + width, y + height);
 		vertexData[5].setUV(1.0f, 1.0f);
+
+
+
 
 		for (int i = 0; i < 6; i++)
 		{

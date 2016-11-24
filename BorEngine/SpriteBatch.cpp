@@ -24,15 +24,16 @@ namespace BorEngine
 	{
 		_sortType = sortType;
 		_renderBatches.clear();
-		for (int i = 0; i < _glyphs.size(); i++)
-		{
-			delete _glyphs[i];
-		}
 		_glyphs.clear();
 	}
 
 	void SpriteBatch::end()
 	{
+		_glyphPointers.resize(_glyphs.size());
+		for (int i = 0; i < _glyphs.size(); i++)
+		{
+			_glyphPointers[i] = &_glyphs[i];
+		}
 		sortGlyphs();
 		createRenderBatches();
 	}
@@ -40,27 +41,7 @@ namespace BorEngine
 	// void draw(glm::vec2 position, glm::vec2 size, ...);
 	void SpriteBatch::draw(const glm::vec4& destRect, const glm::vec4& uvRect, GLuint texture, float depth, const ColorRGB8& color)
 	{
-		Glyph* newGlyph = new Glyph;
-		newGlyph->texture = texture;
-		newGlyph->depth = depth;
-
-		newGlyph->topLeft.color = color;
-		newGlyph->topLeft.setPosition(destRect.x, destRect.y + destRect.w);
-		newGlyph->topLeft.setUV(uvRect.x, uvRect.y + uvRect.w);
-
-		newGlyph->bottomLeft.color = color;
-		newGlyph->bottomLeft.setPosition(destRect.x, destRect.y);
-		newGlyph->bottomLeft.setUV(uvRect.x, uvRect.y);
-
-		newGlyph->bottomRight.color = color;
-		newGlyph->bottomRight.setPosition(destRect.x + destRect.z, destRect.y);
-		newGlyph->bottomRight.setUV(uvRect.x + uvRect.z, uvRect.y);
-
-		newGlyph->topRight.color = color;
-		newGlyph->topRight.setPosition(destRect.x + destRect.z, destRect.y + destRect.w);
-		newGlyph->topRight.setUV(uvRect.x + uvRect.z, uvRect.y + uvRect.w);
-
-		_glyphs.push_back(newGlyph);
+		_glyphs.emplace_back(destRect, uvRect, texture, depth, color);
 	}
 
 	void SpriteBatch::renderBatch()
@@ -78,9 +59,9 @@ namespace BorEngine
 	void SpriteBatch::createRenderBatches()
 	{
 		std::vector <Vertex> vertices;
-		vertices.resize(_glyphs.size() * 6); // faster thanks to allocating the exact memory we need!
+		vertices.resize(_glyphPointers.size() * 6); // faster thanks to allocating the exact memory we need!
 
-		if (_glyphs.empty()) {
+		if (_glyphPointers.empty()) {
 			return;
 		}
 
@@ -89,36 +70,34 @@ namespace BorEngine
 
 		// RenderBatch myBatch(0, 6, _glyphs[0]->texture);
 		// _renderBatches.push_back(myBatch);
-		_renderBatches.emplace_back(offset, 6, _glyphs[0]->texture);
+		_renderBatches.emplace_back(offset, 6, _glyphPointers[0]->texture);
 
-		vertices[cv++] = _glyphs[0]->topLeft;
-		vertices[cv++] = _glyphs[0]->bottomLeft;
-		vertices[cv++] = _glyphs[0]->bottomRight;
+		vertices[cv++] = _glyphPointers[0]->topLeft;
+		vertices[cv++] = _glyphPointers[0]->bottomLeft;
+		vertices[cv++] = _glyphPointers[0]->bottomRight;
 
-		vertices[cv++] = _glyphs[0]->bottomRight;
-		vertices[cv++] = _glyphs[0]->topRight;
-		vertices[cv++] = _glyphs[0]->topLeft;
+		vertices[cv++] = _glyphPointers[0]->bottomRight;
+		vertices[cv++] = _glyphPointers[0]->topRight;
+		vertices[cv++] = _glyphPointers[0]->topLeft;
 
-		offset += 6;
 		for (int cg = 1; cg < _glyphs.size(); cg++) // cg : current glyph
 		{
+			offset += 6;
 
-			if (_glyphs[cg]->texture != _glyphs[cg - 1]->texture) {
-				_renderBatches.emplace_back(offset, 6, _glyphs[cg]->texture);
+			if (_glyphPointers[cg]->texture != _glyphPointers[cg - 1]->texture) {
+				_renderBatches.emplace_back(offset, 6, _glyphPointers[cg]->texture);
 			}
 			else {
 				_renderBatches.back().numVertices += 6;
 			}
 
-			vertices[cv++] = _glyphs[cg]->topLeft;
-			vertices[cv++] = _glyphs[cg]->bottomLeft;
-			vertices[cv++] = _glyphs[cg]->bottomRight;
+			vertices[cv++] = _glyphPointers[cg]->topLeft;
+			vertices[cv++] = _glyphPointers[cg]->bottomLeft;
+			vertices[cv++] = _glyphPointers[cg]->bottomRight;
 
-			vertices[cv++] = _glyphs[cg]->bottomRight;
-			vertices[cv++] = _glyphs[cg]->topRight;
-			vertices[cv++] = _glyphs[cg]->topLeft;
-
-			offset += 6;
+			vertices[cv++] = _glyphPointers[cg]->bottomRight;
+			vertices[cv++] = _glyphPointers[cg]->topRight;
+			vertices[cv++] = _glyphPointers[cg]->topLeft;
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, _vbo);
@@ -164,13 +143,13 @@ namespace BorEngine
 		switch (_sortType)
 		{
 		case BorEngine::GlyphSortType::BACK_TO_FRONT:
-			std::stable_sort(_glyphs.begin(), _glyphs.end(), compareBackToFront);
+			std::stable_sort(_glyphPointers.begin(), _glyphPointers.end(), compareBackToFront);
 			break;
 		case BorEngine::GlyphSortType::FRONT_TO_BACK:
-			std::stable_sort(_glyphs.begin(), _glyphs.end(), compareFrontToBack);
+			std::stable_sort(_glyphPointers.begin(), _glyphPointers.end(), compareFrontToBack);
 			break;
 		case BorEngine::GlyphSortType::TEXTURE:
-			std::stable_sort(_glyphs.begin(), _glyphs.end(), compareTexture);
+			std::stable_sort(_glyphPointers.begin(), _glyphPointers.end(), compareTexture);
 			break;
 		}
 	}
