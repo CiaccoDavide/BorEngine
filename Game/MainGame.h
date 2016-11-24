@@ -42,19 +42,19 @@ private:
 	void writeText(const char* str, int data, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment);
 
 	BorEngine::Window _window;
-	int _screenWidth;
-	int _screenHeight;
+	int _screenWidth = 1080;
+	int _screenHeight = 640;
 
-	GameState _gameState;
+	GameState _gameState = GameState::PLAY;
 
 	float _mouseX;
 	float _mouseY;
 	BorEngine::InputManager _inputManager;
 
 	BorEngine::FPSLimiter _fpsLimiter;
-	float _time;
+	float _time = 0;
 	float _fps;
-	float _maxFPS;
+	float _maxFPS = 60.0f;
 
 	BorEngine::GLSLProgram _colorProgram;
 	BorEngine::Camera2D _camera;
@@ -65,5 +65,5 @@ private:
 	BorEngine::SpriteFont* _spriteFont;
 
 	char _textBuffer[256];
-	int _updatesCount;
+	int _updatesCount = 0;
 };

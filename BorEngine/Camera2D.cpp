@@ -4,14 +4,7 @@
 
 namespace BorEngine
 {
-	Camera2D::Camera2D() :
-		_position(0.0f, 0.0f),
-		_cameraMatrix(1.0f),
-		_orthoMatrix(1.0f),
-		_scale(1.0f),
-		_needsMatrixUpdate(true),
-		_screenWidth(240),
-		_screenHeight(120)
+	Camera2D::Camera2D()
 	{
 	}
 

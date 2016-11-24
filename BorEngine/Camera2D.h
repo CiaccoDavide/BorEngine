@@ -3,7 +3,7 @@
 #include <glm\glm.hpp>
 #include <glm\gtc\matrix_transform.hpp>
 namespace BorEngine
-{ 
+{
 	class Camera2D
 	{
 	public:
@@ -34,11 +34,12 @@ namespace BorEngine
 		glm::mat4 getCameraMatrix() { return _cameraMatrix; }
 
 	private:
-		int _screenWidth, _screenHeight;
-		bool _needsMatrixUpdate;
-		glm::vec2 _position;
-		glm::mat4 _cameraMatrix;
-		glm::mat4 _orthoMatrix;
-		float _scale;
+		int _screenWidth = 240;
+		int _screenHeight = 120;
+		bool _needsMatrixUpdate = true;
+		glm::vec2 _position = glm::vec2(0.0f, 0.0f);
+		glm::mat4 _cameraMatrix = glm::mat4(1.0f);
+		glm::mat4 _orthoMatrix = glm::mat4(1.0f);
+		float _scale = 1.0f;
 	};
 }

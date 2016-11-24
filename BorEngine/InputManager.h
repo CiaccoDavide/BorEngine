@@ -27,7 +27,7 @@ namespace BorEngine
 	private:
 		std::unordered_map<unsigned int, bool> _keyMap;
 		std::unordered_map<unsigned int, bool> _prevKeyMap;
-		glm::vec2 _mouseCoords;
+		glm::vec2 _mouseCoords = glm::vec2(0.0f);
 		bool _wasKeyDown(unsigned int keyID);
 	};
 

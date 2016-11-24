@@ -89,8 +89,8 @@ namespace BorEngine
 		static bool compareBackToFront(Glyph* a, Glyph* b);
 		static bool compareTexture(Glyph* a, Glyph* b);
 
-		GLuint _vbo; // vertex buffer object
-		GLuint _vao; // vertex array object
+		GLuint _vbo = 0; // vertex buffer object
+		GLuint _vao = 0; // vertex array object
 
 		GlyphSortType _sortType;
 

@@ -9,13 +9,7 @@
 
 #include <BorEngine\SpriteFont.h>
 
-MainGame::MainGame() :
-	_screenWidth(880),
-	_screenHeight(620),
-	_gameState(GameState::PLAY),
-	_time(0),
-	_maxFPS(60.0f),
-	_updatesCount(0)
+MainGame::MainGame()
 {
 	_camera.init(_screenWidth, _screenHeight);
 	_hudCamera.init(_screenWidth, _screenHeight);

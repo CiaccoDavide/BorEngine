@@ -5,7 +5,7 @@
 namespace BorEngine
 {
 
-	SpriteBatch::SpriteBatch() :_vbo(0), _vao(0)
+	SpriteBatch::SpriteBatch()
 	{
 	}
 
