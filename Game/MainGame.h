@@ -17,6 +17,9 @@
 #include <BorEngine\Timing.h>
 
 #include <BorEngine\SpriteFont.h>
+#include <BorEngine\AudioEngine.h>
+#include <BorEngine\ParticleEngine2D.h>
+#include <BorEngine\ParticleBatch2D.h>
 
 enum class GameState {
 	PLAY,
@@ -42,8 +45,8 @@ private:
 	void writeText(const char* str, int data, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment);
 
 	BorEngine::Window _window;
-	int p_screenWidth = 1080;
-	int p_screenHeight = 640;
+	int p_screenWidth = 720;
+	int p_screenHeight = 480;
 
 	GameState p_gameState = GameState::PLAY;
 
@@ -54,7 +57,7 @@ private:
 	BorEngine::FPSLimiter p_fpsLimiter;
 	float p_time = 0;
 	float p_fps;
-	float p_maxFPS = 60.0f;
+	float p_maxFPS = 60000.0f;
 
 	BorEngine::GLSLProgram p_colorProgram;
 	BorEngine::Camera2D p_camera;
@@ -64,6 +67,12 @@ private:
 	BorEngine::SpriteBatch p_hudSpriteBatch;
 	BorEngine::SpriteFont* p_spriteFont;
 
+	BorEngine::AudioEngine p_audioEngine;
+	BorEngine::SoundEffect p_soundEffect;
+
 	char p_textBuffer[256];
 	int p_updatesCount = 0;
+
+	BorEngine::ParticleEngine2D p_particleEngine;
+	BorEngine::ParticleBatch2D* p_clickedParticleBatch;
 };

@@ -2,12 +2,19 @@
 
 #include <iostream>
 #include <string>
-#include <BorEngine\Errors.h>
+#include <BorEngine\BorEngineErrors.h>
 #include <BorEngine\ResourcesManager.h>
 
 #include <algorithm>
 
 #include <BorEngine\SpriteFont.h>
+//#include <BorEngine\AudioEngine.h>
+#include <BorEngine\ParticleBatch2D.h>
+#include <BorEngine\ParticleEngine2D.h>
+
+#include <random>
+#include <time.h>
+#include <glm\gtx\rotate_vector.hpp>
 
 MainGame::MainGame()
 {
@@ -25,6 +32,11 @@ MainGame::~MainGame()
 void MainGame::run()
 {
 	initSystems();
+
+	BorEngine::Music music = p_audioEngine.loadMusic("Sound/soundtrack.wav");
+	music.play();
+	p_soundEffect = p_audioEngine.loadSoundEffect("Sound/effect.wav");
+
 	gameLoop(); // will return only when the game ends!
 }
 
@@ -33,6 +45,8 @@ static BorEngine::GLTexture texture;
 void MainGame::initSystems()
 {
 	BorEngine::init();
+
+	p_audioEngine.init();
 
 	_window.create("Bor Engine", p_screenWidth, p_screenHeight, BorEngine::DEFAULT);
 
@@ -47,6 +61,10 @@ void MainGame::initSystems()
 	p_fpsLimiter.init(p_maxFPS);
 
 	texture = BorEngine::ResourcesManager::getTexture("./Textures/test_png_icon/icon_transparency_fades.png");
+
+	p_clickedParticleBatch = new BorEngine::ParticleBatch2D;
+	p_clickedParticleBatch->init(10000, 0.01f, BorEngine::ResourcesManager::getTexture("./Textures/star.png"));
+	p_particleEngine.addParticleBatch(p_clickedParticleBatch);
 }
 
 void MainGame::initShaders()
@@ -88,6 +106,8 @@ void MainGame::gameLoop()
 			totalDeltaTime -= deltaTime;
 
 			// here you can update the deltaTime dependant functions!
+
+			p_particleEngine.update(deltaTime);
 
 			i++;
 		}
@@ -146,12 +166,12 @@ void MainGame::processInput()
 	}
 
 	if (p_inputManager.isKeyDown(SDLK_LSHIFT)) {
-		CAMERA_SPEED = 12.0f;
-		SCALE_SPEED = 0.8f;
+		CAMERA_SPEED = 4.0f;
+		SCALE_SPEED = 0.01f;
 	}
 	else {
-		CAMERA_SPEED = 2.0f;
-		SCALE_SPEED = 0.1f;
+		CAMERA_SPEED = 0.5f;
+		SCALE_SPEED = 0.005f;
 	}
 
 	if (p_inputManager.isKeyDown(SDLK_w))
@@ -178,6 +198,24 @@ void MainGame::processInput()
 		glm::vec2 mouseCoords = p_inputManager.getMouseCoords();
 		mouseCoords = p_camera.screenToWorldCoords(mouseCoords);
 		std::cout << "\n [ INPUT ] Click on (" << mouseCoords.x << ", " << mouseCoords.y << ")";
+
+		p_soundEffect.play();
+
+		int numParticles = 1000;
+		for (int i = 0; i < numParticles; i++)
+		{
+
+			// draw particles!
+			static std::mt19937 randEngine(time(nullptr));
+			static std::uniform_real_distribution<float> randAngle(0.0f, 360.0f/* 2.0f*M_PI*/);
+			float r =1+ static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+
+			glm::vec2 velocity(r,0);
+			velocity = glm::rotate(velocity, randAngle(randEngine));
+			BorEngine::ColorRGBA8 color(255, 255, 255, 255);
+
+			p_clickedParticleBatch->addParticle(mouseCoords, velocity, color, 80.0f);
+		}
 	}
 
 
@@ -236,6 +274,9 @@ void MainGame::drawGame()
 
 	p_spriteBatch.end();
 	p_spriteBatch.renderBatch();
+
+	p_particleEngine.draw(&p_spriteBatch);
+
 	p_updatesCount++;
 	drawHUD();
 
@@ -258,8 +299,10 @@ void MainGame::drawHUD() {
 	// string, position, scale, color, horizontal-alignment
 	writeText("Hello, HUD!", glm::vec2(-1, -1), glm::vec2(1.0), BorEngine::ColorRGBA8(0, 0, 0, 255), BorEngine::Justification::MIDDLE);
 	writeText("Hello, HUD!", glm::vec2(0, 0), glm::vec2(1.0), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
-	writeText("Updates: %d", p_updatesCount, glm::vec2(0, -40), glm::vec2(0.4), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
-	writeText("FPS: %d", p_fps, glm::vec2(0, -60), glm::vec2(0.4), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
+	writeText("Updates: %d", p_updatesCount, glm::vec2(-1, -41), glm::vec2(0.6), BorEngine::ColorRGBA8(0, 0, 0, 255), BorEngine::Justification::MIDDLE);
+	writeText("FPS: %d", p_fps, glm::vec2(-1, -81), glm::vec2(0.6), BorEngine::ColorRGBA8(0, 0, 0, 255), BorEngine::Justification::MIDDLE);
+	writeText("Updates: %d", p_updatesCount, glm::vec2(0, -40), glm::vec2(0.6), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
+	writeText("FPS: %d", p_fps, glm::vec2(0, -80), glm::vec2(0.6), BorEngine::ColorRGBA8(255, 255, 255, 255), BorEngine::Justification::MIDDLE);
 
 	p_hudSpriteBatch.end();
 	p_hudSpriteBatch.renderBatch();
