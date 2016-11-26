@@ -42,6 +42,11 @@ void MainGame::run()
 
 static BorEngine::GLTexture texture;
 
+//void updateClickParticles(BorEngine::Particle2D& particle, float deltaTime)
+//{
+//	particle.position += particle.velocity*deltaTime;
+//	particle.color.a = (GLubyte)(particle.lifeTime * 255.0f);
+//}
 void MainGame::initSystems()
 {
 	BorEngine::init();
@@ -63,10 +68,17 @@ void MainGame::initSystems()
 	texture = BorEngine::ResourcesManager::getTexture("./Textures/test_png_icon/icon_transparency_fades.png");
 
 	p_clickedParticleBatch = new BorEngine::ParticleBatch2D;
-	p_clickedParticleBatch->init(10000, 0.01f, BorEngine::ResourcesManager::getTexture("./Textures/star.png"));
+	p_clickedParticleBatch->init(
+		10000,
+		0.01f,
+		BorEngine::ResourcesManager::getTexture("./Textures/star.png"),
+		[](BorEngine::Particle2D& particle, float deltaTime) {
+		 particle.position += particle.velocity*deltaTime;
+		particle.color.a = (GLubyte)(particle.lifeTime * 255.0f);
+	}
+	);
 	p_particleEngine.addParticleBatch(p_clickedParticleBatch);
 }
-
 void MainGame::initShaders()
 {
 	p_colorProgram.compileShaders("Shaders/colorShading.vert", "Shaders/colorShading.frag");
@@ -208,9 +220,9 @@ void MainGame::processInput()
 			// draw particles!
 			static std::mt19937 randEngine(time(nullptr));
 			static std::uniform_real_distribution<float> randAngle(0.0f, 360.0f/* 2.0f*M_PI*/);
-			float r =1+ static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+			float r = 1 + static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 
-			glm::vec2 velocity(r,0);
+			glm::vec2 velocity(r, 0);
 			velocity = glm::rotate(velocity, randAngle(randEngine));
 			BorEngine::ColorRGBA8 color(255, 255, 255, 255);
 

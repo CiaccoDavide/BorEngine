@@ -43,7 +43,7 @@ private:
 	void initShaders();
 	void writeText(const char* str, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment);
 	void writeText(const char* str, int data, glm::vec2 position, glm::vec2 scale, BorEngine::ColorRGBA8 color, BorEngine::Justification alignment);
-
+	//void updateClickParticles(BorEngine::Particle2D& particle, float deltaTime);
 	BorEngine::Window _window;
 	int p_screenWidth = 720;
 	int p_screenHeight = 480;
